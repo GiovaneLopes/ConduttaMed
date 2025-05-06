@@ -1,4 +1,4 @@
-package com.example.proto_med
+package com.business.conduttaMed
 
 import io.flutter.embedding.android.FlutterActivity
 

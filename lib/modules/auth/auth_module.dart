@@ -7,9 +7,6 @@ import 'package:condutta_med/modules/auth/pages/email_confirmation_page.dart';
 
 class AuthModule extends Module {
   @override
-  List<Bind> binds = [];
-
-  @override
   List<ModularRoute> routes = [
     ChildRoute(
       AuthRoutes.login.name,

@@ -7,7 +7,6 @@ import 'package:condutta_med/modules/shared/components/solid_button.dart';
 import 'package:condutta_med/modules/shared/components/default_page.dart';
 import 'package:condutta_med/modules/shared/resources/app_text_styles.dart';
 
-
 class ErrorPage extends StatelessWidget {
   const ErrorPage({super.key});
 
@@ -19,17 +18,18 @@ class ErrorPage extends StatelessWidget {
         children: [
           Image.asset(
             Images.errorIcon,
-            width: 157.w,
+            width: 120.w,
           ),
+          SizedBox(height: 16.h),
           Text(
-            'Sem conexão',
+            'Ops, tivemos um erro',
             style: AppTextStyles.subtitleBold.copyWith(
               color: AppColors.secondary,
             ),
           ),
           SizedBox(height: 16.h),
           Text(
-            'Verifique se o dispositivo está conectado a internet.',
+            'Por favor, tente novamente em instantes.',
             style: AppTextStyles.subtitleNormal.copyWith(
               color: AppColors.grey,
             ),

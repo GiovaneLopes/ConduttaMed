@@ -28,6 +28,7 @@ class DefaultPage extends StatelessWidget {
     return DefaultPage(
       title: title,
       body: body,
+      leading: false,
       closeButton: true,
     );
   }
@@ -68,7 +69,8 @@ class DefaultPage extends StatelessWidget {
               ),
               centerTitle: true,
               backgroundColor: Colors.transparent,
-              elevation: 0,
+              surfaceTintColor: Colors.transparent,
+              elevation: 0,automaticallyImplyLeading: false,
               leading: leading
                   ? IconButton(
                       icon: const Icon(

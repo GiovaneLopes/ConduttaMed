@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "737234615431",
-    "project_id": "condutta-med-dev",
-    "storage_bucket": "condutta-med-dev.firebasestorage.app"
+    "project_number": "816213809207",
+    "project_id": "condutta-med-dev-1b788",
+    "storage_bucket": "condutta-med-dev-1b788.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:737234615431:android:12f9e4026e858fdd498c22",
+        "mobilesdk_app_id": "1:816213809207:android:0af33b2bc060f8019287b2",
         "android_client_info": {
-          "package_name": "com.business.conduttaMed"
+          "package_name": "com.condutta.conduttaMed"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBJ-4a2Tolbl5wa1GMWi6npYuCu4wgIY9g"
+          "current_key": "AIzaSyBsyIefyIxlLWvYgKHg634jZze-9GKTDGA"
         }
       ],
       "services": {

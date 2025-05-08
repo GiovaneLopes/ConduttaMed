@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:condutta_med/modules/auth/auth_routes.dart';
+import 'package:condutta_med/modules/home/home_routes.dart';
 
 class AppBloc extends Cubit<bool> {
   AppBloc() : super(true) {
@@ -8,6 +8,6 @@ class AppBloc extends Cubit<bool> {
 
   void initialize() async {
     await Future.delayed(const Duration(seconds: 3));
-    AuthRoutes.login.navigate();
+    HomeRoutes.home.navigate();
   }
 }

@@ -2,11 +2,18 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../shared/utils/validators.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:brasil_fields/brasil_fields.dart';
 import '../../shared/components/default_page.dart';
 import '../../shared/components/solid_button.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import '../../shared/components/custom_text_field.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:condutta_med/libs/user/model/user_model.dart';
+import 'package:condutta_med/modules/auth/bloc/auth_cubit.dart';
+import 'package:condutta_med/modules/shared/resources/app_colors.dart';
+import 'package:condutta_med/modules/shared/resources/app_text_styles.dart';
+import 'package:condutta_med/modules/shared/components/snackbar_widget.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -16,6 +23,7 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
+  final bloc = Modular.get<AuthCubit>();
   final _formKey = GlobalKey<FormState>();
   final _nomeController = TextEditingController();
   final _emailController = TextEditingController();
@@ -24,9 +32,21 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final _cpfController = TextEditingController();
   final _senhaController = TextEditingController();
   final _confirmarSenhaController = TextEditingController();
+  late DateTime _birthDate;
 
   void _cadastrar() {
-    if (_formKey.currentState!.validate()) {}
+    if (_formKey.currentState!.validate()) {
+      bloc.register(
+        UserModel(
+          name: _nomeController.text,
+          email: _emailController.text,
+          mobile: _celularController.text,
+          cpf: _cpfController.text,
+          password: _senhaController.text,
+          birthDate: _birthDate,
+        ),
+      );
+    }
   }
 
   String? _validateConfirmarSenha(String? value) {
@@ -50,6 +70,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       setState(() {
         _dataNascimentoController.text =
             DateFormat('dd/MM/yyyy').format(picked);
+        _birthDate = picked;
       });
     }
   }
@@ -63,9 +84,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const Text(
+            Text(
               'Preencha seus dados para se cadastrar',
-              style: TextStyle(fontSize: 16.0, color: Colors.grey),
+              style:
+                  AppTextStyles.subtitleNormal.copyWith(color: AppColors.grey),
             ),
             SizedBox(height: 16.h),
             CustomTextFormField(
@@ -122,10 +144,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
               obscureText: true,
             ),
             const SizedBox(height: 24.0),
-            SolidButton(
-              text: 'Cadastrar',
-              onPressed: _cadastrar,
-            ),
+            BlocConsumer<AuthCubit, AuthState>(
+                listener: (context, state) {
+                  if (state.status == AuthStatus.error) {
+                    SnackbarWidget.mostrar(context,
+                        title: state.error?.title,
+                        message: state.error?.message);
+                  }
+                },
+                bloc: bloc,
+                builder: (context, state) {
+                  return SolidButton(
+                    loading: state.status == AuthStatus.loading,
+                    text: 'Cadastrar',
+                    onPressed: _cadastrar,
+                  );
+                }),
           ],
         ),
       ),

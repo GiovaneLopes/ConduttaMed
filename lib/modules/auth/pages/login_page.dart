@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../shared/components/default_page.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:condutta_med/modules/auth/auth_routes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:condutta_med/modules/auth/bloc/auth_cubit.dart';
 import 'package:condutta_med/modules/shared/utils/validators.dart';
 import 'package:condutta_med/modules/shared/resources/images.dart';
 import 'package:condutta_med/modules/shared/resources/app_colors.dart';
 import 'package:condutta_med/modules/shared/components/solid_button.dart';
 import 'package:condutta_med/modules/shared/resources/app_text_styles.dart';
+import 'package:condutta_med/modules/shared/components/snackbar_widget.dart';
 import 'package:condutta_med/modules/shared/components/custom_text_field.dart';
 
 class LoginPage extends StatefulWidget {
@@ -17,12 +21,15 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final bloc = Modular.get<AuthCubit>();
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   void enviar() {
-    if (_formKey.currentState!.validate()) {}
+    if (_formKey.currentState!.validate()) {
+      bloc.login(_emailController.text, _passwordController.text);
+    }
   }
 
   @override
@@ -77,10 +84,22 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-            SolidButton(
-              onPressed: enviar,
-              text: 'Entrar',
-            ),
+            BlocConsumer<AuthCubit, AuthState>(
+                listener: (context, state) {
+                  if (state.status == AuthStatus.error) {
+                    SnackbarWidget.mostrar(context,
+                        title: state.error?.title,
+                        message: state.error?.message);
+                  }
+                },
+                bloc: bloc,
+                builder: (context, state) {
+                  return SolidButton(
+                    loading: state.status == AuthStatus.loading,
+                    onPressed: enviar,
+                    text: 'Entrar',
+                  );
+                }),
             SizedBox(height: 16.h),
             const Divider(),
             Row(

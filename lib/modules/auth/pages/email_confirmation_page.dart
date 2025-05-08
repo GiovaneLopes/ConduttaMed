@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import '../../shared/resources/images.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../shared/resources/app_colors.dart';
 import '../../shared/components/solid_button.dart';
 import '../../shared/resources/app_text_styles.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:condutta_med/modules/auth/bloc/auth_cubit.dart';
 import 'package:condutta_med/modules/shared/components/default_page.dart';
+import 'package:condutta_med/modules/shared/components/snackbar_widget.dart';
 
 class EmailConfirmationPage extends StatelessWidget {
   const EmailConfirmationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Modular.get<AuthCubit>();
     return DefaultPage(
       title: 'Confirmação de E-mail',
       body: Column(
@@ -39,9 +44,36 @@ class EmailConfirmationPage extends StatelessWidget {
             height: 127.h,
           ),
           SizedBox(height: 16.h),
-          SolidButton(
-            onPressed: () {},
-            text: 'Confirmar',
+          BlocConsumer<AuthCubit, AuthState>(
+            bloc: bloc,
+            listener: (context, state) {
+              if (state.status == AuthStatus.error) {
+                SnackbarWidget.mostrar(context,
+                    title: state.error?.title, message: state.error?.message);
+              }
+            },
+            builder: (context, state) {
+              return Column(
+                children: [
+                  SolidButton(
+                    onPressed: bloc.verifyEmail,
+                    text: 'Confirmar',
+                  ),
+                  SizedBox(height: 16.h),
+                  SolidButton(
+                    onPressed: bloc.sendConfirmationEmail,
+                    text: 'Enviar novamente',
+                  ),
+                  SizedBox(height: 16.h),
+                  Visibility(
+                    visible: state.status == AuthStatus.loading,
+                    child: const CircularProgressIndicator(
+                      color: AppColors.secondary,
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ],
       ),

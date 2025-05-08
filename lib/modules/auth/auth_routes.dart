@@ -6,9 +6,11 @@ class AuthRoutes extends AppRoute {
   final NavigatorType? type;
   AuthRoutes(this.name, {this.type}) : super(module: '/auth');
 
-  static final login = AuthRoutes('/', type: NavigatorType.pushReplacement);
+  static final login = AuthRoutes('/');
   static final registration = AuthRoutes('/registration');
   static final passwordRecover = AuthRoutes('/password-recover');
-  static final emailConfirmation =
-      AuthRoutes('/email-confirmation', type: NavigatorType.pushReplacement);
+  static final emailConfirmation = AuthRoutes(
+    '/email-confirmation',
+    type: NavigatorType.pushReplacement,
+  );
 }

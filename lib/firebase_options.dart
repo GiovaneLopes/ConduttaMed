@@ -50,19 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBJ-4a2Tolbl5wa1GMWi6npYuCu4wgIY9g',
-    appId: '1:737234615431:android:12f9e4026e858fdd498c22',
-    messagingSenderId: '737234615431',
-    projectId: 'condutta-med-dev',
-    storageBucket: 'condutta-med-dev.firebasestorage.app',
+    apiKey: 'AIzaSyBsyIefyIxlLWvYgKHg634jZze-9GKTDGA',
+    appId: '1:816213809207:android:0af33b2bc060f8019287b2',
+    messagingSenderId: '816213809207',
+    projectId: 'condutta-med-dev-1b788',
+    storageBucket: 'condutta-med-dev-1b788.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDgFjMVolzVGQAhS0rkNOnwtaMybT3FlRs',
-    appId: '1:737234615431:ios:554394b226897b45498c22',
-    messagingSenderId: '737234615431',
-    projectId: 'condutta-med-dev',
-    storageBucket: 'condutta-med-dev.firebasestorage.app',
-    iosBundleId: 'com.business.conduttaMed',
+    apiKey: 'AIzaSyBLbx7cu9a9v-saUcrixEY2VO_fY3uZudU',
+    appId: '1:816213809207:ios:d1c9d15bf256059e9287b2',
+    messagingSenderId: '816213809207',
+    projectId: 'condutta-med-dev-1b788',
+    storageBucket: 'condutta-med-dev-1b788.firebasestorage.app',
+    iosBundleId: 'com.condutta.conduttaMed',
   );
+
 }

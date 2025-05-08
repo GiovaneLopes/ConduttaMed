@@ -1,1 +1,30 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"condutta-med-dev","appId":"1:737234615431:android:12f9e4026e858fdd498c22","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"condutta-med-dev","appId":"1:737234615431:ios:554394b226897b45498c22","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"condutta-med-dev","configurations":{"android":"1:737234615431:android:12f9e4026e858fdd498c22","ios":"1:737234615431:ios:554394b226897b45498c22"}}}}}}
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "condutta-med-dev-1b788",
+                    "appId": "1:816213809207:android:0af33b2bc060f8019287b2",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "ios": {
+                "default": {
+                    "projectId": "condutta-med-dev-1b788",
+                    "appId": "1:816213809207:ios:d1c9d15bf256059e9287b2",
+                    "uploadDebugSymbols": false,
+                    "fileOutput": "ios/Runner/GoogleService-Info.plist"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "condutta-med-dev-1b788",
+                    "configurations": {
+                        "android": "1:816213809207:android:0af33b2bc060f8019287b2",
+                        "ios": "1:816213809207:ios:d1c9d15bf256059e9287b2"
+                    }
+                }
+            }
+        }
+    }
+}

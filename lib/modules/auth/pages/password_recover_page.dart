@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import '../../shared/resources/images.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../shared/resources/app_colors.dart';
 import '../../shared/components/solid_button.dart';
 import '../../shared/resources/app_text_styles.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import '../../shared/components/custom_text_field.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:condutta_med/modules/auth/bloc/auth_cubit.dart';
 import 'package:condutta_med/modules/shared/utils/validators.dart';
 import 'package:condutta_med/modules/shared/components/default_page.dart';
+import 'package:condutta_med/modules/shared/components/snackbar_widget.dart';
 
 class PasswordRecoverPage extends StatefulWidget {
   const PasswordRecoverPage({super.key});
@@ -16,11 +20,14 @@ class PasswordRecoverPage extends StatefulWidget {
 }
 
 class _PasswordRecoverPageState extends State<PasswordRecoverPage> {
+  final bloc = Modular.get<AuthCubit>();
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
 
   void _send() {
-    if (_formKey.currentState!.validate()) {}
+    if (_formKey.currentState!.validate()) {
+      bloc.recoverPassword(_emailController.text);
+    }
   }
 
   @override
@@ -58,10 +65,26 @@ class _PasswordRecoverPageState extends State<PasswordRecoverPage> {
             ),
           ),
           SizedBox(height: 16.h),
-          SolidButton(
-            onPressed: _send,
-            text: 'Enviar',
-          ),
+          BlocConsumer<AuthCubit, AuthState>(
+              listener: (context, state) {
+                if (state.status == AuthStatus.error) {
+                  SnackbarWidget.mostrar(context,
+                      title: state.error?.title, message: state.error?.message);
+                } else if (state.status == AuthStatus.loaded) {
+                  SnackbarWidget.mostrar(context,
+                      title: 'E-mail enviado',
+                      message:
+                          'Enviamos um link de recuperação de senha para seu e-mail.');
+                }
+              },
+              bloc: bloc,
+              builder: (context, state) {
+                return SolidButton(
+                  loading: state.status == AuthStatus.loading,
+                  onPressed: _send,
+                  text: 'Enviar',
+                );
+              }),
         ],
       ),
     );

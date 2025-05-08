@@ -7,7 +7,6 @@ import 'package:condutta_med/modules/shared/components/solid_button.dart';
 import 'package:condutta_med/modules/shared/components/default_page.dart';
 import 'package:condutta_med/modules/shared/resources/app_text_styles.dart';
 
-
 class SuccessPage extends StatelessWidget {
   const SuccessPage({super.key});
 
@@ -19,8 +18,9 @@ class SuccessPage extends StatelessWidget {
         children: [
           Image.asset(
             Images.successIcon,
-            width: 157.w,
+            width: 120.w,
           ),
+          SizedBox(height: 16.h),
           Text(
             'Tudo certo!',
             style: AppTextStyles.subtitleBold.copyWith(

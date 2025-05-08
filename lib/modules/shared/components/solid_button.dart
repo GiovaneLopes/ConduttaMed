@@ -6,24 +6,26 @@ import 'package:condutta_med/modules/shared/resources/app_text_styles.dart';
 class SolidButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
+  final bool enabled;
   final bool loading;
 
   const SolidButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.onPressed,
+    this.enabled = true,
     this.loading = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 42.h,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: enabled ? onPressed : null,
+        clipBehavior: Clip.hardEdge,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.secondary,
+          backgroundColor: enabled ? AppColors.secondary : AppColors.disabled,
           padding: const EdgeInsets.symmetric(vertical: 16.0),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.w),
@@ -40,7 +42,7 @@ class SolidButton extends StatelessWidget {
               )
             : Text(
                 text,
-                style: AppTextStyles.bodyBold.copyWith(
+                style: AppTextStyles.subtitleBold.copyWith(
                   color: AppColors.textWhite,
                 ),
               ),

@@ -15,7 +15,7 @@ class CustomTextFormField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
 
   const CustomTextFormField({
-    Key? key,
+    super.key,
     required this.labelText,
     this.controller,
     this.validator,
@@ -26,7 +26,7 @@ class CustomTextFormField extends StatelessWidget {
     this.suffixIcon,
     this.onTap,
     this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

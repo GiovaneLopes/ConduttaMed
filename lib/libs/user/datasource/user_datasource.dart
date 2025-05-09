@@ -1,6 +1,7 @@
 import '../model/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:condutta_med/libs/src/utils/network_checker.dart';
 import 'package:condutta_med/libs/src/exceptions/generic_errors.dart';
 import 'package:condutta_med/libs/user/errors/user_datasource_errors.dart';
 
@@ -18,9 +19,26 @@ class UserDatasourceImpl extends UserDatasource {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseDatabase _db = FirebaseDatabase.instance;
 
+  Future<T> _safeCall<T>(Future<T> Function() action) async {
+    try {
+      await NetworkChecker.checkConnection();
+
+      return await action();
+    } on FirebaseAuthException catch (e) {
+      throw UserDatasourceError.fromFirebaseAuthException(e);
+    } catch (e) {
+      if (e is AppGenericErrors) {
+        if (e.code == AppGenericErrors.noConnectionError.code) {
+          throw AppGenericErrors.noConnectionError;
+        }
+      }
+      throw AppGenericErrors.genericError;
+    }
+  }
+
   @override
   Future<void> register(UserModel newUser) async {
-    try {
+    await _safeCall(() async {
       final userCredential = await _auth.createUserWithEmailAndPassword(
         email: newUser.email ?? '',
         password: newUser.password ?? '',
@@ -34,16 +52,12 @@ class UserDatasourceImpl extends UserDatasource {
       } else {
         throw FirebaseAuthException;
       }
-    } on FirebaseAuthException catch (e) {
-      throw UserDatasourceError.fromFirebaseAuthException(e);
-    } catch (e) {
-      throw AppGenericErrors.genericError;
-    }
+    });
   }
 
   @override
   Future<UserModel?> getUser() async {
-    try {
+    return await _safeCall(() async {
       final uid = _auth.currentUser?.uid;
 
       if (uid != null) {
@@ -55,35 +69,28 @@ class UserDatasourceImpl extends UserDatasource {
       } else {
         return null;
       }
-    } catch (e) {
-      throw AppGenericErrors.genericError;
-    }
+    });
   }
 
   @override
   Future<bool> verifyEmail() async {
-    try {
+    return await _safeCall(() async {
       await _auth.currentUser?.reload();
       final user = _auth.currentUser;
-
-      if (user?.emailVerified ?? false) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      throw AppGenericErrors.genericError;
-    }
+      return user?.emailVerified ?? false;
+    });
   }
 
   @override
   Future<void> sendEmailConfirmation() async {
-    await _auth.currentUser?.sendEmailVerification();
+    await _safeCall(() async {
+      await _auth.currentUser?.sendEmailVerification();
+    });
   }
 
   @override
   Future<User> login(String email, String password) async {
-    try {
+    return await _safeCall(() async {
       final userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
@@ -94,30 +101,20 @@ class UserDatasourceImpl extends UserDatasource {
       } else {
         throw Exception();
       }
-    } on FirebaseAuthException catch (e) {
-      throw UserDatasourceError.fromFirebaseAuthException(e);
-    } catch (e) {
-      throw AppGenericErrors.genericError;
-    }
+    });
   }
 
   @override
   Future<void> recoverPassword(String email) async {
-    try {
+    await _safeCall(() async {
       await _auth.sendPasswordResetEmail(email: email);
-    } catch (e) {
-      throw AppGenericErrors.genericError;
-    }
+    });
   }
 
   @override
   Future<void> logout() async {
-    try {
+    await _safeCall(() async {
       await _auth.signOut();
-    } on FirebaseAuthException catch (e) {
-      throw UserDatasourceError.fromFirebaseAuthException(e);
-    } catch (e) {
-      throw AppGenericErrors.genericError;
-    }
+    });
   }
 }

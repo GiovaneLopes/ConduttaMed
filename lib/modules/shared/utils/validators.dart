@@ -27,9 +27,16 @@ class AppValidators {
       return 'Campo obrigatório';
     }
     try {
-      DateFormat('dd/MM/yyyy').parseStrict(value);
+      final date = DateFormat('dd/MM/yyyy').parse(value);
+      final today = DateTime.now();
+      final age = today.year - date.year;
+
+      if (age < 16 ||
+          (age == 16 && today.isBefore(date.add(Duration(days: 365 * age))))) {
+        return 'Você deve ter pelo menos 16 anos.';
+      }
     } catch (e) {
-      return 'Data de nascimento inválida (dd/MM/yyyy)';
+      return 'Data de nascimento inválida.';
     }
     return null;
   }
@@ -56,12 +63,31 @@ class AppValidators {
     return null;
   }
 
+  static String? validateLoginSenha(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Campo obrigatório';
+    }
+    if (value.length < 8) {
+      return 'Senha deve ter pelo menos 6 caracteres';
+    }
+    return null;
+  }
+
   static String? validateSenha(String? value) {
     if (value == null || value.isEmpty) {
       return 'Campo obrigatório';
     }
-    if (value.length < 6) {
-      return 'Senha deve ter pelo menos 6 caracteres';
+    if (value.length < 8) {
+      return 'A senha deve ter no mínimo 8 caracteres';
+    }
+    if (!value.contains(RegExp(r'[A-Z]'))) {
+      return 'A senha deve conter pelo menos uma letra maiúscula';
+    }
+    if (!value.contains(RegExp(r'[0-9]'))) {
+      return 'A senha deve conter pelo menos um número';
+    }
+    if (!value.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'))) {
+      return 'A senha deve conter pelo menos um caractere especial';
     }
     return null;
   }

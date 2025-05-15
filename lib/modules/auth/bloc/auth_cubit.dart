@@ -26,11 +26,17 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> initialize() async {
     try {
       emit(state.copyWith(status: AuthStatus.loading));
-      final user = await repository.getUser();
-      emit(state.copyWith(
-        user: () => user,
-        status: AuthStatus.loaded,
-      ));
+      final isVerified = await repository.verifyEmail();
+      if (isVerified != null && isVerified == false) {
+        emit(state.copyWith(route: AuthRoutes.emailConfirmation));
+      } else {
+        final user = await repository.getUser();
+        emit(state.copyWith(
+          user: () => user,
+          route: HomeRoutes.home,
+        ));
+      }
+      emit(state.copyWith(status: AuthStatus.loaded));
     } catch (e) {
       emit(state.copyWith(
         status: AuthStatus.error,
@@ -84,17 +90,16 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       emit(state.copyWith(status: AuthStatus.loading));
       final isVerified = await repository.verifyEmail();
-      if (isVerified) {
-        final user = await repository.getUser();
-        emit(state.copyWith(
-          status: AuthStatus.loaded,
-          user: () => user,
-          route: HomeRoutes.home,
-        ));
+      if (isVerified == true) {
+        emit(state.copyWith(route: HomeRoutes.home));
+        await Future.delayed(const Duration(milliseconds: 250));
+        initialize();
       } else {
-        throw UserDatasourceError.emailNotVerified;
+        emit(state.copyWith(
+          status: AuthStatus.error,
+          error: UserDatasourceError.emailNotVerified,
+        ));
       }
-      emit(state.copyWith(status: AuthStatus.loaded));
     } catch (e) {
       emit(state.copyWith(
         status: AuthStatus.error,
@@ -108,10 +113,6 @@ class AuthCubit extends Cubit<AuthState> {
       emit(state.copyWith(status: AuthStatus.loading));
       await repository.sendEmailConfirmation();
       emit(state.copyWith(status: AuthStatus.loaded));
-      throw UserDatasourceError(
-        title: 'E-mail enviado',
-        message: 'Enviamos um novo link de confirmação para seu e-mail',
-      );
     } catch (e) {
       emit(state.copyWith(
         status: AuthStatus.error,

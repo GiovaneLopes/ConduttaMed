@@ -7,9 +7,10 @@ import 'package:condutta_med/libs/user/errors/user_datasource_errors.dart';
 
 abstract class UserDatasource {
   Future<void> register(UserModel newUser);
+  Future<void> update(UserModel newUser);
   Future<User> login(String email, String password);
   Future<UserModel?> getUser();
-  Future<bool> verifyEmail();
+  Future<bool?> verifyEmail();
   Future<void> sendEmailConfirmation();
   Future<void> recoverPassword(String email);
   Future<void> logout();
@@ -22,7 +23,6 @@ class UserDatasourceImpl extends UserDatasource {
   Future<T> _safeCall<T>(Future<T> Function() action) async {
     try {
       await NetworkChecker.checkConnection();
-
       return await action();
     } on FirebaseAuthException catch (e) {
       throw UserDatasourceError.fromFirebaseAuthException(e);
@@ -56,6 +56,19 @@ class UserDatasourceImpl extends UserDatasource {
   }
 
   @override
+  Future<void> update(UserModel newUser) async {
+    await _safeCall(() async {
+      final user = _auth.currentUser;
+      if (user != null) {
+        final usersRef = _db.ref('users/').child(user.uid);
+        await usersRef.update(newUser.toJson());
+      } else {
+        throw FirebaseAuthException;
+      }
+    });
+  }
+
+  @override
   Future<UserModel?> getUser() async {
     return await _safeCall(() async {
       final uid = _auth.currentUser?.uid;
@@ -73,11 +86,14 @@ class UserDatasourceImpl extends UserDatasource {
   }
 
   @override
-  Future<bool> verifyEmail() async {
+  Future<bool?> verifyEmail() async {
     return await _safeCall(() async {
       await _auth.currentUser?.reload();
       final user = _auth.currentUser;
-      return user?.emailVerified ?? false;
+      if (user != null) {
+        return user.emailVerified;
+      }
+      return null;
     });
   }
 

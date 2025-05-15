@@ -4,9 +4,10 @@ import 'package:condutta_med/libs/user/datasource/user_datasource.dart';
 
 abstract class UserRepository {
   Future<void> register(UserModel user);
+  Future<void> update(UserModel user);
   Future<User> login(String email, String password);
   Future<UserModel?> getUser();
-  Future<bool> verifyEmail();
+  Future<bool?> verifyEmail();
   Future<void> sendEmailConfirmation();
   Future<void> recoverPassword(String email);
   Future<void> logout();
@@ -22,6 +23,11 @@ class UserRepositoryImpl extends UserRepository {
   }
 
   @override
+  Future<void> update(UserModel user) async {
+    await datasource.update(user);
+  }
+
+  @override
   Future<User> login(String email, String password) async {
     return await datasource.login(email, password);
   }
@@ -32,7 +38,7 @@ class UserRepositoryImpl extends UserRepository {
   }
 
   @override
-  Future<bool> verifyEmail() async {
+  Future<bool?> verifyEmail() async {
     return await datasource.verifyEmail();
   }
 

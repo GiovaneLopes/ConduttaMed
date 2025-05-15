@@ -27,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
 
   void enviar() {
+    FocusManager.instance.primaryFocus?.unfocus();
     if (_formKey.currentState!.validate()) {
       bloc.login(_emailController.text, _passwordController.text);
     }
@@ -68,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
             CustomTextFormField(
               controller: _passwordController,
               obscureText: true,
-              validator: AppValidators.validateSenha,
+              validator: AppValidators.validateLoginSenha,
               labelText: 'Senha',
             ),
             Align(

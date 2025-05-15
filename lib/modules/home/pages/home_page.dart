@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_modular/flutter_modular.dart';
-import 'package:condutta_med/modules/auth/auth_routes.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:condutta_med/modules/auth/bloc/auth_cubit.dart';
-import 'package:condutta_med/modules/shared/utils/string_extension.dart';
-import 'package:condutta_med/modules/shared/components/default_page.dart';
-import 'package:condutta_med/modules/shared/components/solid_button.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:condutta_med/modules/shared/resources/app_colors.dart';
+import 'package:condutta_med/modules/home/widgets/home_tab_content.dart';
+import 'package:condutta_med/modules/home/widgets/profile_tab_content.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,38 +14,37 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final authBloc = Modular.get<AuthCubit>();
+  int _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    return DefaultPage.withNoAppbar(
-      body: Center(
-        child: BlocBuilder<AuthCubit, AuthState>(
-            bloc: authBloc,
-            builder: (context, state) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  state.status == AuthStatus.loading
-                      ? const CircularProgressIndicator()
-                      : Text(
-                          'Welcome ${Modular.get<AuthCubit>().state.user?.name?.capitalize() ?? 'User'}',
-                        ),
-                  SizedBox(height: 16.h),
-                  if (state.user == null)
-                    SolidButton(
-                      text: 'Login',
-                      enabled: state.status == AuthStatus.loaded,
-                      onPressed: AuthRoutes.login.navigate,
-                    )
-                  else
-                    SolidButton(
-                      text: 'Logout',
-                      enabled: state.status == AuthStatus.loaded,
-                      onPressed: authBloc.logout,
-                    ),
-                ],
-              );
-            }),
+    return Scaffold(
+      backgroundColor: _currentIndex == 0 ? AppColors.secondary : Colors.white,
+      body: SafeArea(
+        child: _currentIndex == 0
+            ? const HomeTabContent()
+            : const ProfileTabContent(),
+      ),
+      bottomNavigationBar: CupertinoTabBar(
+        backgroundColor: Colors.white,
+        currentIndex: _currentIndex,
+        onTap: (value) => setState(() {
+          _currentIndex = value;
+        }),
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              FeatherIcons.home,
+              size: 24.w,
+            ),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              FeatherIcons.menu,
+              size: 24.w,
+            ),
+          ),
+        ],
       ),
     );
   }

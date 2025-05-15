@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:condutta_med/libs/src/utils/app_localization.dart';
 import 'package:condutta_med/modules/shared/resources/app_colors.dart';
 
 class AppWidget extends StatelessWidget {
@@ -20,6 +21,8 @@ class AppWidget extends StatelessWidget {
           )),
           routeInformationParser: Modular.routeInformationParser,
           routerDelegate: Modular.routerDelegate,
+          supportedLocales: AppLocalization().supportedLocales,
+          localizationsDelegates: AppLocalization().localizationsDelegates,
         );
       },
     );

@@ -13,8 +13,8 @@ class UserDatasourceError extends AppError {
         );
 
   static final emailNotVerified = UserDatasourceError(
-    title: 'E-mail não verificado',
-    message: 'Enviamos um link de confirmação para o e-mail cadastrado.',
+    title: 'Email não verificado',
+    message: 'O email ainda não foi verificado.',
   );
 
   factory UserDatasourceError.fromFirebaseAuthException(
@@ -60,6 +60,10 @@ class UserDatasourceError extends AppError {
         title = 'Erro de Autenticação';
         message = 'Ocorreu um erro de autenticação: ${e.message}';
     }
-    return UserDatasourceError(title: title, message: message, code: code);
+    return UserDatasourceError(
+      title: title,
+      message: message,
+      code: code,
+    );
   }
 }

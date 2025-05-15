@@ -41,15 +41,25 @@ class EmailConfirmationPage extends StatelessWidget {
           SizedBox(height: 16.h),
           Image.asset(
             Images.emailConfirmation,
-            height: 127.h,
+            height: 80.h,
           ),
           SizedBox(height: 16.h),
           BlocConsumer<AuthCubit, AuthState>(
             bloc: bloc,
             listener: (context, state) {
               if (state.status == AuthStatus.error) {
-                SnackbarWidget.mostrar(context,
-                    title: state.error?.title, message: state.error?.message);
+                SnackbarWidget.mostrar(
+                  context,
+                  title: state.error?.title,
+                  message: state.error?.message,
+                );
+              } else if (state.status == AuthStatus.loaded) {
+                SnackbarWidget.mostrar(
+                  context,  
+                  title: 'Enviado',
+                  message: 'Verifique seu e-mail para confirmar sua conta.',
+                  type: SnackbarWidgetType.success,
+                );
               }
             },
             builder: (context, state) {

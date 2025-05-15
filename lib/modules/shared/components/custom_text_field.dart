@@ -9,6 +9,7 @@ class CustomTextFormField extends StatelessWidget {
   final TextInputType? keyboardType;
   final bool obscureText;
   final bool readOnly;
+  final bool enabled;
   final List<TextInputFormatter>? inputFormatters;
   final Widget? suffixIcon;
   final Function()? onTap;
@@ -22,6 +23,7 @@ class CustomTextFormField extends StatelessWidget {
     this.keyboardType,
     this.obscureText = false,
     this.readOnly = false,
+    this.enabled = true,
     this.inputFormatters,
     this.suffixIcon,
     this.onTap,
@@ -40,10 +42,18 @@ class CustomTextFormField extends StatelessWidget {
         cursorColor: AppColors.secondary,
         readOnly: readOnly,
         onTap: onTap,
+        style: TextStyle(
+          color: enabled ? AppColors.textBlack : AppColors.grey,
+        ),
         decoration: InputDecoration(
+          fillColor: enabled
+              ? AppColors.textWhite
+              : AppColors.disabled.withOpacity(.25),
+          filled: true,
           focusColor: AppColors.secondary,
           labelText: labelText,
           labelStyle: const TextStyle(color: AppColors.secondary),
+          errorMaxLines: 2,
           border: const OutlineInputBorder(
             borderSide: BorderSide(
               color: AppColors.disabled,
@@ -54,6 +64,12 @@ class CustomTextFormField extends StatelessWidget {
               color: AppColors.secondary,
             ),
           ),
+          suffixIcon: enabled
+              ? null
+              : const Icon(
+                  Icons.lock_outline,
+                  color: AppColors.grey,
+                ),
         ),
         validator: validator,
         keyboardType: keyboardType,

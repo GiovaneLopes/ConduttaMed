@@ -1,7 +1,11 @@
 import 'package:condutta_med/libs/src/exceptions/app_error.dart';
 
 class AppGenericErrors extends AppError {
-  AppGenericErrors({required super.title, required super.message, super.code});
+  AppGenericErrors({
+    required super.title,
+    required super.message,
+    super.code,
+  });
 
   static final noConnectionError = AppGenericErrors(
     title: 'Sem Conexão',

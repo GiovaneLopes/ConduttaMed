@@ -35,6 +35,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   late DateTime _birthDate;
 
   void _cadastrar() {
+    FocusManager.instance.primaryFocus?.unfocus();
     if (_formKey.currentState!.validate()) {
       bloc.register(
         UserModel(
@@ -42,6 +43,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           email: _emailController.text,
           mobile: _celularController.text,
           cpf: _cpfController.text,
+          
           password: _senhaController.text,
           birthDate: _birthDate,
         ),

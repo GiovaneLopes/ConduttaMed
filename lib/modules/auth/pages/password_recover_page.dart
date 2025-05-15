@@ -25,6 +25,7 @@ class _PasswordRecoverPageState extends State<PasswordRecoverPage> {
   final _emailController = TextEditingController();
 
   void _send() {
+    FocusManager.instance.primaryFocus?.unfocus();
     if (_formKey.currentState!.validate()) {
       bloc.recoverPassword(_emailController.text);
     }
@@ -71,10 +72,13 @@ class _PasswordRecoverPageState extends State<PasswordRecoverPage> {
                   SnackbarWidget.mostrar(context,
                       title: state.error?.title, message: state.error?.message);
                 } else if (state.status == AuthStatus.loaded) {
-                  SnackbarWidget.mostrar(context,
-                      title: 'E-mail enviado',
-                      message:
-                          'Enviamos um link de recuperação de senha para seu e-mail.');
+                  SnackbarWidget.mostrar(
+                    context,
+                    title: 'E-mail enviado',
+                    type: SnackbarWidgetType.success,
+                    message:
+                        'Enviamos um link de recuperação de senha para seu e-mail.',
+                  );
                 }
               },
               bloc: bloc,

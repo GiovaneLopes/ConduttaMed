@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:condutta_med/modules/auth/auth_routes.dart';
+import 'package:condutta_med/modules/acls/acls_routes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:condutta_med/modules/home/models/home_item.dart';
 import 'package:condutta_med/modules/shared/resources/images.dart';
@@ -20,7 +20,7 @@ class _HomeTabContentState extends State<HomeTabContent> {
     HomeItem(
       title: 'Ressuscitação Cardiopulmonar (ACLS)',
       type: HomeItemType.emphasys,
-      route: AuthRoutes.login,
+      route: AclsRoutes.initial,
     ),
   ];
   @override

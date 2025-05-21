@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class DefaultPage extends StatelessWidget {
   final String? title;
   final Widget? body;
+  final Widget? actions;
   final bool leading;
   final bool closeButton;
   final bool appBar;
@@ -15,6 +16,7 @@ class DefaultPage extends StatelessWidget {
     super.key,
     this.title = '',
     required this.body,
+    this.actions,
     this.leading = false,
     this.closeButton = false,
     this.appBar = true,
@@ -36,10 +38,12 @@ class DefaultPage extends StatelessWidget {
   static withBackButton({
     String? title,
     Widget? body,
+    Widget? actions,
   }) {
     return DefaultPage(
       title: title,
       body: body,
+      actions: actions,
       leading: true,
     );
   }
@@ -70,7 +74,8 @@ class DefaultPage extends StatelessWidget {
               centerTitle: true,
               backgroundColor: Colors.transparent,
               surfaceTintColor: Colors.transparent,
-              elevation: 0,automaticallyImplyLeading: false,
+              elevation: 0,
+              automaticallyImplyLeading: false,
               leading: leading
                   ? IconButton(
                       icon: const Icon(
@@ -92,7 +97,7 @@ class DefaultPage extends StatelessWidget {
                         },
                       ),
                     ]
-                  : [],
+                  : [actions ?? const SizedBox.shrink()],
             )
           : null,
       body: LayoutBuilder(

@@ -51,7 +51,7 @@ class IconNavigationTile extends StatelessWidget {
             const Expanded(child: SizedBox()),
             Icon(
               Icons.chevron_right,
-              color: enabled ? AppColors.grey : AppColors.disabled,
+              color:  AppColors.disabled,
               size: 24.w,
             ),
           ],

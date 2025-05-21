@@ -86,7 +86,7 @@ class _PasswordRecoverPageState extends State<PasswordRecoverPage> {
                 return SolidButton(
                   loading: state.status == AuthStatus.loading,
                   onPressed: _send,
-                  text: 'Enviar',
+                  label: 'Enviar',
                 );
               }),
         ],

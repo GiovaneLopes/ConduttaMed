@@ -31,6 +31,7 @@ class AuthCubit extends Cubit<AuthState> {
         emit(state.copyWith(route: AuthRoutes.emailConfirmation));
       } else {
         final user = await repository.getUser();
+        await Future.delayed(const Duration(seconds: 3));
         emit(state.copyWith(
           user: () => user,
           route: HomeRoutes.home,

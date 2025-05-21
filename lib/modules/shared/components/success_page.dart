@@ -36,7 +36,7 @@ class SuccessPage extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
           SolidButton(
-            text: 'Fechar',
+            label: 'Fechar',
             onPressed: Modular.to.pop,
           ),
         ],

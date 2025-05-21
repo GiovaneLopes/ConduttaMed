@@ -43,7 +43,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
           email: _emailController.text,
           mobile: _celularController.text,
           cpf: _cpfController.text,
-          
           password: _senhaController.text,
           birthDate: _birthDate,
         ),
@@ -158,7 +157,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 builder: (context, state) {
                   return SolidButton(
                     loading: state.status == AuthStatus.loading,
-                    text: 'Cadastrar',
+                    label: 'Cadastrar',
                     onPressed: _cadastrar,
                   );
                 }),

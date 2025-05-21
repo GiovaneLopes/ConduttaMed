@@ -4,14 +4,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:condutta_med/modules/shared/resources/app_text_styles.dart';
 
 class SolidButton extends StatelessWidget {
-  final String text;
+  final String label;
   final VoidCallback onPressed;
   final bool enabled;
   final bool loading;
 
   const SolidButton({
     super.key,
-    required this.text,
+    required this.label,
     required this.onPressed,
     this.enabled = true,
     this.loading = false,
@@ -41,8 +41,8 @@ class SolidButton extends StatelessWidget {
                 ),
               )
             : Text(
-                text,
-                style: AppTextStyles.subtitleBold.copyWith(
+                label,
+                style: AppTextStyles.bodyBold.copyWith(
                   color: AppColors.textWhite,
                 ),
               ),

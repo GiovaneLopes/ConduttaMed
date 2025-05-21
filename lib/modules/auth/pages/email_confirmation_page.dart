@@ -67,12 +67,12 @@ class EmailConfirmationPage extends StatelessWidget {
                 children: [
                   SolidButton(
                     onPressed: bloc.verifyEmail,
-                    text: 'Confirmar',
+                    label: 'Confirmar',
                   ),
                   SizedBox(height: 16.h),
                   SolidButton(
                     onPressed: bloc.sendConfirmationEmail,
-                    text: 'Enviar novamente',
+                    label: 'Enviar novamente',
                   ),
                   SizedBox(height: 16.h),
                   Visibility(

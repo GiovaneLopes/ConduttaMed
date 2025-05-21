@@ -22,7 +22,9 @@ class UserDatasourceImpl extends UserDatasource {
 
   Future<T> _safeCall<T>(Future<T> Function() action) async {
     try {
-      await NetworkChecker.checkConnection();
+      if (!await NetworkChecker.isConnected()) {
+        throw AppGenericErrors.noConnectionError;
+      }
       return await action();
     } on FirebaseAuthException catch (e) {
       throw UserDatasourceError.fromFirebaseAuthException(e);

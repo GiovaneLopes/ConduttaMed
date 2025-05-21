@@ -150,7 +150,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(height: 24.0),
                   SolidButton(
                     loading: state.status == ProfileStatus.loading,
-                    text: 'Salvar',
+                    label: 'Salvar',
                     onPressed: _salvar,
                   ),
                 ],

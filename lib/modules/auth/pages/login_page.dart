@@ -98,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                   return SolidButton(
                     loading: state.status == AuthStatus.loading,
                     onPressed: enviar,
-                    text: 'Entrar',
+                    label: 'Entrar',
                   );
                 }),
             SizedBox(height: 16.h),

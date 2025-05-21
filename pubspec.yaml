@@ -26,6 +26,8 @@ dependencies:
   connectivity_plus: ^6.1.4
   flutter_localization: ^0.3.0
   flutter_feather_icons: ^2.0.0+1
+  material_symbols_icons: ^4.2815.0
+  shared_preferences: ^2.3.3
 
 dev_dependencies:
   flutter_test:

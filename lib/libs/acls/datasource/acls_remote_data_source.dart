@@ -32,6 +32,7 @@ class AclsRemoteDataSourceImpl implements AclsRemoteDataSource {
     return await _safeCall(() async {
       final ref = _db.ref('settings/acls/').child(userId);
       final response = await ref.get();
+
       if (response.exists) {
         final settingsData = Map<String, dynamic>.from(response.value as Map);
         return AclsSettings.fromJson(settingsData);

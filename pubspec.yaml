@@ -28,6 +28,11 @@ dependencies:
   flutter_feather_icons: ^2.0.0+1
   material_symbols_icons: ^4.2815.0
   shared_preferences: ^2.3.3
+  google_sign_in: ^6.2.2
+  sign_in_with_apple: ^7.0.1
+  just_audio: ^0.9.46
+  awesome_snackbar_content: ^0.1.4
+  top_snackbar_flutter: ^3.3.0
 
 dev_dependencies:
   flutter_test:

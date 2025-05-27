@@ -12,6 +12,7 @@ class DefaultPage extends StatelessWidget {
   final bool closeButton;
   final bool appBar;
   final bool centerPage;
+  final VoidCallback? onBack;
   const DefaultPage({
     super.key,
     this.title = '',
@@ -21,6 +22,7 @@ class DefaultPage extends StatelessWidget {
     this.closeButton = false,
     this.appBar = true,
     this.centerPage = false,
+    this.onBack,
   });
 
   static withCloseButton({
@@ -39,12 +41,14 @@ class DefaultPage extends StatelessWidget {
     String? title,
     Widget? body,
     Widget? actions,
+    VoidCallback? onBack,
   }) {
     return DefaultPage(
       title: title,
       body: body,
       actions: actions,
       leading: true,
+      onBack: onBack,
     );
   }
 
@@ -82,7 +86,7 @@ class DefaultPage extends StatelessWidget {
                         Icons.arrow_back,
                         color: AppColors.secondary,
                       ),
-                      onPressed: Modular.to.pop,
+                      onPressed: onBack ?? Modular.to.pop,
                     )
                   : null,
               actions: closeButton

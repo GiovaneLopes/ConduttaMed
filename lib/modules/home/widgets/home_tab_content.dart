@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:condutta_med/modules/acls/acls_routes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:condutta_med/modules/auth/bloc/auth_cubit.dart';
 import 'package:condutta_med/modules/home/models/home_item.dart';
 import 'package:condutta_med/modules/shared/resources/images.dart';
 import 'package:condutta_med/modules/home/widgets/rounded_card.dart';
@@ -25,6 +27,7 @@ class _HomeTabContentState extends State<HomeTabContent> {
   ];
   @override
   Widget build(BuildContext context) {
+    final userName = Modular.get<AuthCubit>().state.user?.name;
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
@@ -40,11 +43,28 @@ class _HomeTabContentState extends State<HomeTabContent> {
                     height: 42.w,
                   ),
                   const SizedBox(width: 8),
-                  Text(
-                    'Condutta Med',
-                    style: AppTextStyles.bodyBold.copyWith(
-                      color: AppColors.textWhite,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Condutta Med',
+                        style: AppTextStyles.bodyBold.copyWith(
+                          color: AppColors.textWhite,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Visibility(
+                        visible: userName != null,
+                        child: Text(
+                          userName != null
+                              ? 'Olá, ${userName.split(' ').first}'
+                              : '',
+                          style: AppTextStyles.subtitleBold.copyWith(
+                            color: AppColors.textWhite,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

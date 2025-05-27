@@ -9,6 +9,7 @@ import 'package:condutta_med/modules/shared/components/default_page.dart';
 import 'package:condutta_med/modules/shared/components/custom_dialog.dart';
 import 'package:condutta_med/modules/shared/resources/app_text_styles.dart';
 import 'package:condutta_med/modules/shared/components/snackbar_widget.dart';
+import 'package:condutta_med/modules/shared/components/custom_switch_tile.dart';
 import 'package:condutta_med/modules/shared/components/icon_navigation_tile.dart';
 import 'package:condutta_med/modules/acls/bloc/acls_settings/acls_settings_cubit.dart';
 
@@ -62,7 +63,7 @@ class _AclsSettingsPageState extends State<AclsSettingsPage> {
                       return Flexible(
                         child: GestureDetector(
                           onTap: () => setState(() {
-                            bloc.updateSettings(state.settings.copyWith(
+                            bloc.saveSettings(state.settings.copyWith(
                               defaultFrequency: state.frequencies[item],
                             ));
                           }),
@@ -116,7 +117,7 @@ class _AclsSettingsPageState extends State<AclsSettingsPage> {
                       return Flexible(
                         child: GestureDetector(
                           onTap: () => setState(() {
-                            bloc.updateSettings(state.settings.copyWith(
+                            bloc.saveSettings(state.settings.copyWith(
                               defaultTime: state.times[item],
                             ));
                           }),
@@ -150,13 +151,22 @@ class _AclsSettingsPageState extends State<AclsSettingsPage> {
                 SizedBox(height: 12.h),
                 IconNavigationTile(
                   icon: Icons.pending_actions_outlined,
-                  title: 'Eventos',
+                  value: 'Eventos',
                   onTap: AclsRoutes.events.navigate,
                 ),
                 IconNavigationTile(
                   icon: Symbols.pill,
-                  title: 'Medicações',
+                  value: 'Medicações',
                   onTap: AclsRoutes.medications.navigate,
+                ),
+                CustomSwitchTile(
+                  value: state.settings.showInitialSuggestions,
+                  title: 'Mostrar medidas iniciais',
+                  onChanged: (value) {
+                    bloc.saveSettings(state.settings.copyWith(
+                      showInitialSuggestions: value,
+                    ));
+                  },
                 ),
                 SizedBox(height: 12.h),
                 OutlinedButton(

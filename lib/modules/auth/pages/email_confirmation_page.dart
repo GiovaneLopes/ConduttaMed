@@ -55,7 +55,7 @@ class EmailConfirmationPage extends StatelessWidget {
                 );
               } else if (state.status == AuthStatus.loaded) {
                 SnackbarWidget.mostrar(
-                  context,  
+                  context,
                   title: 'Enviado',
                   message: 'Verifique seu e-mail para confirmar sua conta.',
                   type: SnackbarWidgetType.success,

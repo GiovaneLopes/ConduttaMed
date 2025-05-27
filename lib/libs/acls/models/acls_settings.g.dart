@@ -9,6 +9,7 @@ part of 'acls_settings.dart';
 AclsSettings _$AclsSettingsFromJson(Map<String, dynamic> json) => AclsSettings(
       defaultFrequency: (json['defaultFrequency'] as num?)?.toInt() ?? 100,
       defaultTime: (json['defaultTime'] as num?)?.toInt() ?? 3,
+      showInitialSuggestions: json['showInitialSuggestions'] as bool? ?? true,
       events: (json['events'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -63,6 +64,7 @@ Map<String, dynamic> _$AclsSettingsToJson(AclsSettings instance) =>
     <String, dynamic>{
       'defaultFrequency': instance.defaultFrequency,
       'defaultTime': instance.defaultTime,
+      'showInitialSuggestions': instance.showInitialSuggestions,
       'events': instance.events,
       'medications': instance.medications.map((e) => e.toJson()).toList(),
     };

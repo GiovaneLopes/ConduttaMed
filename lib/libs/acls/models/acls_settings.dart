@@ -8,12 +8,14 @@ part 'acls_settings.g.dart';
 class AclsSettings extends Equatable {
   final int defaultFrequency;
   final int defaultTime;
+  final bool showInitialSuggestions;
   final List<String> events;
   final List<AclsMedication> medications;
 
   const AclsSettings({
     this.defaultFrequency = 100,
     this.defaultTime = 3,
+    this.showInitialSuggestions = true,
     this.events = const [
       'Monitorização',
       'Ventilação',
@@ -60,10 +62,13 @@ class AclsSettings extends Equatable {
     int? defaultTime,
     List<String>? events,
     List<AclsMedication>? medications,
+    bool? showInitialSuggestions,
   }) {
     return AclsSettings(
       defaultFrequency: defaultFrequency ?? this.defaultFrequency,
       defaultTime: defaultTime ?? this.defaultTime,
+      showInitialSuggestions:
+          showInitialSuggestions ?? this.showInitialSuggestions,
       events: events ?? this.events,
       medications: medications ?? this.medications,
     );
@@ -78,6 +83,7 @@ class AclsSettings extends Equatable {
   List<Object> get props => [
         defaultFrequency,
         defaultTime,
+        showInitialSuggestions,
         events,
         medications,
       ];

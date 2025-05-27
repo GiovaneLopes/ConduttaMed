@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:condutta_med/modules/home/home_routes.dart';
 import 'package:condutta_med/modules/auth/auth_routes.dart';
 import 'package:condutta_med/libs/user/model/user_model.dart';
@@ -11,8 +12,10 @@ import 'package:condutta_med/libs/user/errors/user_datasource_errors.dart';
 part 'auth_state.dart';
 
 enum AuthStatus {
-  uninitialized,
+  initial,
   loading,
+  authenticating,
+  authenticated,
   loaded,
   error,
 }
@@ -62,15 +65,89 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> login(String email, String passsword) async {
+  Future<void> googleAuthentication() async {
+    try {
+      emit(state.copyWith(status: AuthStatus.authenticating));
+      final auth = await repository.googleAuthentication();
+      final user = await repository.getUser();
+      if (user != null) {
+        emit(state.copyWith(
+          user: () => user,
+          status: AuthStatus.authenticated,
+        ));
+      } else {
+        emit(state.copyWith(
+          status: AuthStatus.loaded,
+          route: AuthRoutes.registration,
+          user: () => UserModel(
+            id: auth.user?.uid,
+            name: auth.user?.displayName,
+            email: auth.user?.email,
+          ),
+        ));
+      }
+    } catch (e) {
+      emit(state.copyWith(
+        status: AuthStatus.error,
+        error: e as AppError,
+      ));
+    }
+  }
+
+  Future<void> appleRegister() async {
+    try {
+      final auth = await repository.appleRegister();
+      final user = await repository.getUser();
+      if (user != null) {
+        emit(state.copyWith(
+          user: () => user,
+          status: AuthStatus.authenticated,
+        ));
+      } else {
+        emit(state.copyWith(
+          status: AuthStatus.loaded,
+          route: AuthRoutes.registration,
+          user: () => UserModel(
+            id: auth.user?.uid,
+            name: auth.user?.displayName,
+            email: auth.user?.email,
+          ),
+        ));
+      }
+    } catch (e) {
+      emit(state.copyWith(
+        status: AuthStatus.error,
+        error: e as AppError,
+      ));
+    }
+  }
+
+  Future<void> saveUserData(UserModel newUser) async {
     try {
       emit(state.copyWith(status: AuthStatus.loading));
-      final response = await repository.login(email, passsword);
+      await repository.saveUserData(newUser);
+      emit(state.copyWith(
+        status: AuthStatus.loaded,
+        user: () => newUser,
+      ));
+      Modular.to.pop();
+    } catch (e) {
+      emit(state.copyWith(
+        status: AuthStatus.error,
+        error: e as AppError,
+      ));
+    }
+  }
+
+  Future<void> login(String email, String password) async {
+    try {
+      emit(state.copyWith(status: AuthStatus.loading));
+      final response = await repository.login(email, password);
       if (response.emailVerified) {
         final user = await repository.getUser();
         emit(state.copyWith(
           route: HomeRoutes.home,
-          status: AuthStatus.loaded,
+          status: AuthStatus.authenticated,
           user: () => user,
         ));
       } else {
@@ -139,10 +216,10 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       emit(state.copyWith(status: AuthStatus.loading));
       await repository.logout();
-      final user = await repository.getUser();
+
       emit(state.copyWith(
         status: AuthStatus.loaded,
-        user: () => user,
+        user: () => null,
       ));
     } catch (e) {
       emit(state.copyWith(

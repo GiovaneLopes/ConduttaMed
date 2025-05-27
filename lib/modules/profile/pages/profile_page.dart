@@ -113,6 +113,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   CustomTextFormField(
                     labelText: 'E-mail',
                     controller: _emailController,
+                    readOnly: true,
+                    enabled: false,
                     validator: AppValidators.validateEmail,
                     keyboardType: TextInputType.emailAddress,
                   ),

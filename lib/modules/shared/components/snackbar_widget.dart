@@ -5,23 +5,17 @@ import 'package:condutta_med/modules/shared/resources/app_text_styles.dart';
 
 enum SnackbarWidgetType {
   error,
+  warning,
   success;
 
   Color color() {
     switch (this) {
       case SnackbarWidgetType.error:
         return AppColors.danger;
+      case SnackbarWidgetType.warning:
+        return AppColors.tertiary;
       case SnackbarWidgetType.success:
-        return AppColors.secondary;
-    }
-  }
-
-  IconData icon() {
-    switch (this) {
-      case SnackbarWidgetType.error:
-        return Icons.error_outline;
-      default:
-        return Icons.info_outline;
+        return AppColors.success;
     }
   }
 }
@@ -33,43 +27,59 @@ class SnackbarWidget {
     String? message,
     SnackbarWidgetType? type = SnackbarWidgetType.error,
   }) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        margin: EdgeInsets.all(16.w),
-        padding: EdgeInsets.all(15.w),
-        behavior: SnackBarBehavior.floating,
-        content: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(
-              type?.icon(),
-              color: AppColors.textWhite,
-            ),
-            SizedBox(width: 4.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          margin: EdgeInsets.all(16.w),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.w),
+          ),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    title ?? 'Erro',
-                    style: AppTextStyles.bodyBold.copyWith(
-                      color: AppColors.textWhite,
+                  Expanded(
+                    child: Text(
+                      title ?? 'Erro',
+                      textAlign: TextAlign.start,
+                      style: AppTextStyles.bodyBold.copyWith(
+                        color: type == SnackbarWidgetType.error
+                            ? AppColors.textWhite
+                            : AppColors.textBlack,
+                      ),
                     ),
                   ),
-                  Text(
-                    message ?? 'Tente novamente em instantes.',
-                    style: AppTextStyles.subtitleNormal.copyWith(
-                      color: AppColors.textWhite,
+                  IconButton(
+                    onPressed:
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar,
+                    icon: Icon(
+                      Icons.close,
+                      color: type == SnackbarWidgetType.error
+                          ? AppColors.textWhite
+                          : AppColors.textBlack,
                     ),
                   ),
                 ],
               ),
-            ),
-          ],
+              Text(
+                message ?? 'Tente novamente em instantes.',
+                style: AppTextStyles.bodyNormalSmall.copyWith(
+                  color: type == SnackbarWidgetType.error
+                      ? AppColors.textWhite
+                      : AppColors.textBlack,
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: type?.color(),
+          duration: const Duration(seconds: 5),
         ),
-        backgroundColor: type?.color(),
-        duration: const Duration(seconds: 5),
-      ),
-    );
+      );
   }
 }

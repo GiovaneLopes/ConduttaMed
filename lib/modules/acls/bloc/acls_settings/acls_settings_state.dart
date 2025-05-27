@@ -6,7 +6,7 @@ class AclsSettingsState {
   final AclsSettings settings;
 
   const AclsSettingsState({
-    this.status = AclsSettingsStatus.uninitialized,
+    this.status = AclsSettingsStatus.initial,
     this.error,
     this.settings = const AclsSettings(),
   });

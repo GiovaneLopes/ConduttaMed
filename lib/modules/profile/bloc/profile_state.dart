@@ -5,7 +5,7 @@ class ProfileState extends Equatable {
   final UserModel? user;
   final AppError? error;
   const ProfileState({
-    this.status = ProfileStatus.uninitialized,
+    this.status = ProfileStatus.initial,
     this.user,
     this.error,
   });

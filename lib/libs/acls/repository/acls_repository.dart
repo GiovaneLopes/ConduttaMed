@@ -7,6 +7,7 @@ abstract class AclsRespository {
   Future<void> saveSettings(AclsSettings settings, String? userId);
   Future<AclsSettings?> loadSettings(String? userId);
   Future<void> resetSettings(String? userId);
+  Future<void> resetLocalSettings();
 }
 
 class AclsRespositoryImpl implements AclsRespository {
@@ -39,8 +40,13 @@ class AclsRespositoryImpl implements AclsRespository {
   }
 
   @override
-  Future<void> resetSettings(String? userId) async {
+  Future<void> resetLocalSettings() async {
     await localDataSource.resetSettings();
+  }
+
+  @override
+  Future<void> resetSettings(String? userId) async {
+    await resetLocalSettings();
     if (await NetworkChecker.isConnected() && userId != null) {
       remoteDataSource.resetSettings(userId);
     }

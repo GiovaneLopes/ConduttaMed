@@ -8,6 +8,8 @@ class SolidButton extends StatelessWidget {
   final VoidCallback onPressed;
   final bool enabled;
   final bool loading;
+  final Color? color;
+  final IconData? icon;
 
   const SolidButton({
     super.key,
@@ -15,18 +17,19 @@ class SolidButton extends StatelessWidget {
     required this.onPressed,
     this.enabled = true,
     this.loading = false,
+    this.color = AppColors.secondary,
+    this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
+      height: 42,
       child: ElevatedButton(
         onPressed: enabled ? onPressed : null,
-        clipBehavior: Clip.hardEdge,
         style: ElevatedButton.styleFrom(
-          backgroundColor: enabled ? AppColors.secondary : AppColors.disabled,
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          backgroundColor: enabled ? color : AppColors.disabled,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.w),
           ),
@@ -40,11 +43,23 @@ class SolidButton extends StatelessWidget {
                   strokeWidth: 2,
                 ),
               )
-            : Text(
-                label,
-                style: AppTextStyles.bodyBold.copyWith(
-                  color: AppColors.textWhite,
-                ),
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Visibility(
+                    visible: icon != null,
+                    child: Icon(
+                      icon,
+                      color: AppColors.textWhite,
+                    ),
+                  ),
+                  Text(
+                    label,
+                    style: AppTextStyles.bodyBold.copyWith(
+                      color: AppColors.textWhite,
+                    ),
+                  ),
+                ],
               ),
       ),
     );

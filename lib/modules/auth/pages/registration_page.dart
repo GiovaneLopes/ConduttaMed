@@ -34,19 +34,38 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final _confirmarSenhaController = TextEditingController();
   late DateTime _birthDate;
 
+  @override
+  void initState() {
+    super.initState();
+    _nomeController.text = bloc.state.user?.name ?? '';
+    _emailController.text = bloc.state.user?.email ?? '';
+  }
+
   void _cadastrar() {
     FocusManager.instance.primaryFocus?.unfocus();
     if (_formKey.currentState!.validate()) {
-      bloc.register(
-        UserModel(
-          name: _nomeController.text,
-          email: _emailController.text,
-          mobile: _celularController.text,
-          cpf: _cpfController.text,
-          password: _senhaController.text,
-          birthDate: _birthDate,
-        ),
-      );
+      if (bloc.state.user == null) {
+        bloc.register(
+          UserModel(
+            name: _nomeController.text,
+            email: _emailController.text,
+            mobile: _celularController.text,
+            cpf: _cpfController.text,
+            password: _senhaController.text,
+            birthDate: _birthDate,
+          ),
+        );
+      } else {
+        bloc.saveUserData(
+          bloc.state.user!.copyWith(
+            name: _nomeController.text,
+            email: _emailController.text,
+            mobile: _celularController.text,
+            cpf: _cpfController.text,
+            birthDate: _birthDate,
+          ),
+        );
+      }
     }
   }
 
@@ -80,6 +99,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Widget build(BuildContext context) {
     return DefaultPage.withBackButton(
       title: 'Cadastro',
+      onBack: () {
+        bloc.logout();
+        Modular.to.pop();
+      },
       body: Form(
         key: _formKey,
         child: Column(
@@ -132,25 +155,28 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 CpfInputFormatter(),
               ],
             ),
-            CustomTextFormField(
-              labelText: 'Senha',
-              controller: _senhaController,
-              validator: AppValidators.validateSenha,
-              obscureText: true,
-            ),
-            CustomTextFormField(
-              labelText: 'Confirme a senha',
-              controller: _confirmarSenhaController,
-              validator: _validateConfirmarSenha,
-              obscureText: true,
-            ),
+            if (bloc.state.user == null)
+              CustomTextFormField(
+                labelText: 'Senha',
+                controller: _senhaController,
+                validator: AppValidators.validateSenha,
+                obscureText: true,
+              ),
+            if (bloc.state.user == null)
+              CustomTextFormField(
+                labelText: 'Confirme a senha',
+                controller: _confirmarSenhaController,
+                validator: _validateConfirmarSenha,
+                obscureText: true,
+              ),
             const SizedBox(height: 24.0),
             BlocConsumer<AuthCubit, AuthState>(
                 listener: (context, state) {
                   if (state.status == AuthStatus.error) {
-                    SnackbarWidget.mostrar(context,
-                        title: state.error?.title,
-                        message: state.error?.message);
+                     SnackbarWidget.mostrar( context,
+                      title: state.error?.title,
+                      message: state.error?.message,
+                    );
                   }
                 },
                 bloc: bloc,

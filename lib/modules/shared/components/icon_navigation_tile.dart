@@ -5,14 +5,16 @@ import 'package:condutta_med/modules/shared/resources/app_text_styles.dart';
 
 class IconNavigationTile extends StatelessWidget {
   final IconData icon;
-  final String title;
+  final String value;
+  final String? title;
   final bool enabled;
   final VoidCallback onTap;
   const IconNavigationTile({
     super.key,
     required this.icon,
-    required this.title,
+    required this.value,
     required this.onTap,
+    this.title,
     this.enabled = true,
   });
 
@@ -42,16 +44,30 @@ class IconNavigationTile extends StatelessWidget {
               size: 24.w,
             ),
             SizedBox(width: 18.w),
-            Text(
-              title,
-              style: AppTextStyles.subtitleNormal.copyWith(
-                color: enabled ? AppColors.grey : AppColors.disabled,
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Visibility(
+                  visible: title != null,
+                  child: Text(
+                    title ?? '',
+                    style: AppTextStyles.subtitleBold.copyWith(
+                      color: AppColors.grey,
+                    ),
+                  ),
+                ),
+                Text(
+                  value,
+                  style: AppTextStyles.subtitleNormal.copyWith(
+                    color: enabled ? AppColors.grey : AppColors.disabled,
+                  ),
+                ),
+              ],
             ),
             const Expanded(child: SizedBox()),
             Icon(
               Icons.chevron_right,
-              color:  AppColors.disabled,
+              color: AppColors.secondary,
               size: 24.w,
             ),
           ],

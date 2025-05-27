@@ -7,7 +7,7 @@ import 'package:condutta_med/libs/user/repository/user_repository.dart';
 part 'profile_state.dart';
 
 enum ProfileStatus {
-  uninitialized,
+  initial,
   loading,
   loaded,
   updated,

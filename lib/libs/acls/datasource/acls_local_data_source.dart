@@ -28,7 +28,6 @@ class AclsLocalDataSourceImpl extends AclsLocalDataSource {
   @override
   Future<AclsSettings?> loadSettings() async {
     final settingsString = instance.getString(_settingsKey);
-
     if (settingsString != null) {
       return AclsSettings.fromJson(jsonDecode(settingsString));
     }

@@ -8,7 +8,7 @@ import 'package:condutta_med/libs/acls/repository/acls_repository.dart';
 part 'acls_settings_state.dart';
 
 enum AclsSettingsStatus {
-  uninitialized,
+  initial,
   loading,
   loaded,
   error,
@@ -41,7 +41,7 @@ class AclsSettingsCubit extends Cubit<AclsSettingsState> {
     }
   }
 
-  Future<void> updateSettings(AclsSettings settings) async {
+  Future<void> saveSettings(AclsSettings settings) async {
     try {
       await _repository.saveSettings(settings, _authCubit.state.user?.id);
       emit(state.copyWith(settings: settings));

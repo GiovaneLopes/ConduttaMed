@@ -40,7 +40,7 @@ class AppModule extends Module {
       child: (context, args) => const SuccessPage(),
     ),
     ModuleRoute(
-      AuthRoutes.login.module,
+      AuthRoutes.registration.module,
       transition: TransitionType.rightToLeft,
       module: AuthModule(),
     ),

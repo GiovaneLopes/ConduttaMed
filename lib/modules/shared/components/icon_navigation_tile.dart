@@ -7,6 +7,7 @@ class IconNavigationTile extends StatelessWidget {
   final IconData icon;
   final String value;
   final String? title;
+  final Color? backgroundColor;
   final bool enabled;
   final VoidCallback onTap;
   const IconNavigationTile({
@@ -14,6 +15,7 @@ class IconNavigationTile extends StatelessWidget {
     required this.icon,
     required this.value,
     required this.onTap,
+    this.backgroundColor,
     this.title,
     this.enabled = true,
   });
@@ -25,11 +27,13 @@ class IconNavigationTile extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(bottom: 16.h),
         decoration: BoxDecoration(
-          color: AppColors.textWhite,
+          color: backgroundColor ?? AppColors.textWhite,
           borderRadius: BorderRadius.circular(12.w),
           boxShadow: [
             BoxShadow(
-              color: AppColors.grey.withOpacity(.25),
+              color: backgroundColor != null
+                  ? AppColors.textWhite
+                  : AppColors.grey.withOpacity(.25),
               blurRadius: 4,
               offset: const Offset(2, 2),
             ),
@@ -52,7 +56,9 @@ class IconNavigationTile extends StatelessWidget {
                   child: Text(
                     title ?? '',
                     style: AppTextStyles.subtitleBold.copyWith(
-                      color: AppColors.grey,
+                      color: backgroundColor != null
+                          ? AppColors.textWhite
+                          : AppColors.grey,
                     ),
                   ),
                 ),

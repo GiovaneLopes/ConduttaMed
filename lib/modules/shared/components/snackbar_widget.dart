@@ -48,7 +48,7 @@ class SnackbarWidget {
                     child: Text(
                       title ?? 'Erro',
                       textAlign: TextAlign.start,
-                      style: AppTextStyles.bodyBold.copyWith(
+                      style: AppTextStyles.bodyNormal.copyWith(
                         color: type == SnackbarWidgetType.error
                             ? AppColors.textWhite
                             : AppColors.textBlack,

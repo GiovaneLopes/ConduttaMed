@@ -57,6 +57,23 @@ class AclsSettings extends Equatable {
     ],
   });
 
+  int get miliseconds {
+    switch (defaultFrequency) {
+      case 100:
+        return 600;
+      case 105:
+        return 571;
+      case 110:
+        return 545;
+      case 115:
+        return 521;
+      case 120:
+        return 500;
+      default:
+        return 100;
+    }
+  }
+
   AclsSettings copyWith({
     int? defaultFrequency,
     int? defaultTime,

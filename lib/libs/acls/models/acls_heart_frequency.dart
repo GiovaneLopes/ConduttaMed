@@ -51,6 +51,16 @@ enum AclsHeartFrequency {
     }
   }
 
+  bool get isShockable {
+    switch (this) {
+      case AclsHeartFrequency.fv:
+      case AclsHeartFrequency.tvsp:
+        return true;
+      default:
+        return false;
+    }
+  }
+
   static List<AclsHeartFrequency> get allValues => [
         AclsHeartFrequency.fv,
         AclsHeartFrequency.tvsp,

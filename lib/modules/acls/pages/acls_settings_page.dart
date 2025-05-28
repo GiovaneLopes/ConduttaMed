@@ -152,12 +152,12 @@ class _AclsSettingsPageState extends State<AclsSettingsPage> {
                 IconNavigationTile(
                   icon: Icons.pending_actions_outlined,
                   value: 'Eventos',
-                  onTap: AclsRoutes.events.navigate,
+                  onTap: AclsRoutes.settingsEvents.navigate,
                 ),
                 IconNavigationTile(
                   icon: Symbols.pill,
                   value: 'Medicações',
-                  onTap: AclsRoutes.medications.navigate,
+                  onTap: AclsRoutes.settingsMedications.navigate,
                 ),
                 CustomSwitchTile(
                   value: state.settings.showInitialSuggestions,

@@ -1,3 +1,5 @@
+import 'package:condutta_med/libs/acls/models/acls_heart_frequency.dart';
+import 'package:condutta_med/libs/acls/models/acls_step.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -40,7 +42,7 @@ class _AclsProtocolContentState extends State<AclsProtocolContent> {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  'Iniciar compressão torácica',
+                  state.step.toString(),
                   style: AppTextStyles.subtitleBold
                       .copyWith(color: AppColors.success),
                 ),
@@ -49,22 +51,39 @@ class _AclsProtocolContentState extends State<AclsProtocolContent> {
                   icon: Symbols.monitor_heart,
                   title: 'Ritmo cardíaco',
                   value: state.heartFrequency.toString(),
+                  backgroundColor:
+                      (state.heartFrequency == AclsHeartFrequency.unknown)
+                          ? AppColors.success
+                          : null,
                   onTap: AclsRoutes.heartFrequency.navigate,
                 ),
                 SizedBox(height: 12.h),
                 _buildActionSection(
-                  label: 'Compressão torácica',
-                  time: '00:00',
-                  buttonText: 'Iniciar',
-                  color: AppColors.success,
-                  onButtonPressed: () {},
+                  label: 'Massagem cardíaca',
+                  time: state.formatTime(state.compressionsTime),
+                  value: (120 - state.compressionsTime) / 120,
+                  buttonText:
+                      state.compressionsTime < 120 ? 'Parar' : 'Iniciar',
+                  indicatorColor: state.compressionsTime <= 15
+                      ? AppColors.danger
+                      : state.compressionsTime <= 30
+                          ? AppColors.tertiary
+                          : AppColors.success,
+                  color: (state.step == AclsStep.massage)
+                      ? AppColors.success
+                      : AppColors.secondary,
+                  onButtonPressed: bloc.startCompressions,
                 ),
                 SizedBox(height: 12.h),
                 _buildActionSection(
                   label: 'Adrenalina',
                   time: '00:00',
+                  value: 0,
                   buttonText: 'Administrar',
-                  color: AppColors.secondary,
+                  color: (state.step == AclsStep.medication)
+                      ? AppColors.success
+                      : AppColors.secondary,
+                  indicatorColor: AppColors.success,
                   icon: Icons.medication_outlined,
                   onButtonPressed: () {},
                 ),
@@ -73,6 +92,9 @@ class _AclsProtocolContentState extends State<AclsProtocolContent> {
                 SizedBox(height: 12.h),
                 SolidButton(
                   label: 'Choque',
+                  color: (state.step == AclsStep.shock)
+                      ? AppColors.success
+                      : AppColors.secondary,
                   icon: Icons.bolt,
                   onPressed: () {},
                 ),
@@ -118,6 +140,8 @@ class _AclsProtocolContentState extends State<AclsProtocolContent> {
     required String buttonText,
     required VoidCallback onButtonPressed,
     required Color color,
+    required Color indicatorColor,
+    required double? value,
     IconData? icon,
   }) {
     return Column(
@@ -135,19 +159,18 @@ class _AclsProtocolContentState extends State<AclsProtocolContent> {
             Text(
               time,
               style: AppTextStyles.bodyBold.copyWith(
-                color: AppColors.grey,
+                color: (value ?? 0) > 0 ? AppColors.grey : Colors.transparent,
               ),
             ),
           ],
         ),
         const SizedBox(height: 5),
         LinearProgressIndicator(
-          value: 0.5,
-          minHeight: 10.h,
-          backgroundColor: Colors.grey[300],
-          borderRadius: BorderRadius.circular(10.h),
-          color: AppColors.success,
-        ),
+            value: value,
+            minHeight: 10.h,
+            backgroundColor: Colors.grey[300],
+            borderRadius: BorderRadius.circular(10.h),
+            color: indicatorColor),
         const SizedBox(height: 10),
         SolidButton(
           label: buttonText,

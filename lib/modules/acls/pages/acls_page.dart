@@ -62,7 +62,7 @@ class _AclsPageState extends State<AclsPage>
             children: [
               SizedBox(height: 24.w),
               Text(
-                state.formatTime(state.totalTimer),
+                state.formatTime(state.totalTimer?.tick),
                 style: AppTextStyles.titleBold.copyWith(
                   color: AppColors.grey,
                 ),

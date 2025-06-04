@@ -2,6 +2,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:condutta_med/modules/acls/acls_routes.dart';
 import 'package:condutta_med/modules/acls/pages/acls_page.dart';
 import 'package:condutta_med/modules/acls/bloc/acls/acls_cubit.dart';
+import 'package:condutta_med/modules/acls/pages/acls_finish_page.dart';
 import 'package:condutta_med/modules/acls/pages/acls_events_page.dart';
 import 'package:condutta_med/libs/acls/repository/acls_repository.dart';
 import 'package:condutta_med/modules/acls/pages/acls_initial_page.dart';
@@ -62,6 +63,10 @@ class AclsModule extends Module {
         ChildRoute(
           AclsRoutes.settingsMedications.name,
           child: (context, args) => const AclsSettingsMedicationsPage(),
+        ),
+        ChildRoute(
+          AclsRoutes.finish.name,
+          child: (context, args) => const AclsFinishPage(),
         ),
       ];
 }

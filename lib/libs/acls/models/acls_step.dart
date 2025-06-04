@@ -11,7 +11,7 @@ enum AclsStep {
       case AclsStep.frequency:
         return 'Identificar ritmo de parada';
       case AclsStep.massage:
-        return 'Iniciar massagem cardíaca';
+        return 'Iniciar compressão torácica';
       case AclsStep.shock:
         return 'Administrar Choque';
       case AclsStep.medication:

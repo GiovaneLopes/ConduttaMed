@@ -9,6 +9,7 @@ class SolidButton extends StatelessWidget {
   final bool enabled;
   final bool loading;
   final Color? color;
+  final Color labelColor;
   final IconData? icon;
 
   const SolidButton({
@@ -18,6 +19,7 @@ class SolidButton extends StatelessWidget {
     this.enabled = true,
     this.loading = false,
     this.color = AppColors.secondary,
+    this.labelColor = AppColors.textWhite,
     this.icon,
   });
 
@@ -50,13 +52,13 @@ class SolidButton extends StatelessWidget {
                     visible: icon != null,
                     child: Icon(
                       icon,
-                      color: AppColors.textWhite,
+                      color: labelColor,
                     ),
                   ),
                   Text(
                     label,
                     style: AppTextStyles.bodyBold.copyWith(
-                      color: AppColors.textWhite,
+                      color: labelColor,
                     ),
                   ),
                 ],

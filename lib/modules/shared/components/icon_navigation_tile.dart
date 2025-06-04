@@ -57,7 +57,7 @@ class IconNavigationTile extends StatelessWidget {
                     title ?? '',
                     style: AppTextStyles.subtitleBold.copyWith(
                       color: backgroundColor != null
-                          ? AppColors.textWhite
+                          ? AppColors.textBlack.withOpacity(.75)
                           : AppColors.grey,
                     ),
                   ),

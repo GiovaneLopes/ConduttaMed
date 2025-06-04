@@ -5,12 +5,18 @@ class AclsState {
   final AclsStatus status;
   final AclsStep step;
   final Timer? totalTimer;
-  final int compressionsTime;
-  final int adrenalineTime;
+  final Timer? compressionsTimer;
+  final Timer? restTimer;
+  final Timer? medicationTimer;
   final AclsHeartFrequency heartFrequency;
   final List<String> events;
   final List<AclsMedication> medications;
   final bool advancedAirway;
+  final int totalCompressions;
+  final int totalAdrenalines;
+  final int totalMedications;
+  final int totalShocks;
+  final List<ActivityLog> activities;
   final AclsAlert? alert;
   final AppError? error;
 
@@ -19,35 +25,77 @@ class AclsState {
     this.status = AclsStatus.initial,
     this.step = AclsStep.massage,
     this.totalTimer,
-    this.compressionsTime = 120,
-    this.adrenalineTime = 240,
+    this.compressionsTimer,
+    this.restTimer,
+    this.medicationTimer,
     this.heartFrequency = AclsHeartFrequency.unknown,
     this.events = const [],
     this.medications = const [],
     this.advancedAirway = false,
+    this.totalCompressions = 0,
+    this.totalAdrenalines = 0,
+    this.totalMedications = 0,
+    this.totalShocks = 0,
+    this.activities = const [],
     this.alert,
     this.error,
   });
-  String formatTime(int? sec) {
-    if (sec == null) {
-      return '00:00';
-    }
-    final minutes = sec ~/ 60;
-    final seconds = sec % 60;
-    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+
+  String formatTime(int totalSeconds) {
+    final minutes = (totalSeconds ~/ 60).toString().padLeft(2, '0');
+    final seconds = (totalSeconds % 60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
   }
+
+  String get compressionsTimerFormatted {
+    bool isTimer1Active = compressionsTimer?.isActive ?? false;
+    bool isTimer2Active = restTimer?.isActive ?? false;
+
+    if (!isTimer1Active && !isTimer2Active) {
+      return formatTime(compressionsTotalTime);
+    } else if (isTimer1Active) {
+      return formatTime(compressionsTimeLeft);
+    } else {
+      return formatTime(restTimeLeft);
+    }
+  }
+
+  String get totalTimeFormatted => formatTime(totalTimer?.tick ?? 0);
+
+  int get compressionsTotalTime => 120;
+  int get restTotalTime => 10;
+  int get medicationTotalTime => settings.defaultTime * 60;
+
+  int get compressionsTick => compressionsTimer?.tick ?? 0;
+  int get compressionsTimeLeft => compressionsTotalTime - compressionsTick;
+
+  int get restTick => restTimer?.tick ?? 0;
+  int get restTimeLeft => restTotalTime - restTick;
+
+  int get medicationTick => medicationTimer?.tick ?? 0;
+  int get medicationTimeLeft => (medicationTotalTime - medicationTick) >= 0
+      ? (medicationTotalTime - medicationTick)
+      : medicationTotalTime;
+
+  int get fct => ((compressionsTick / (totalTimer?.tick ?? 0)) * 100).toInt();
 
   AclsState copyWith({
     AclsSettings? settings,
     AclsStatus? status,
     AclsStep? step,
     Timer? totalTimer,
-    int? compressionsTime,
-    int? adrenalineTime,
+    Nullable<Timer?>? compressionsTimer,
+    Nullable<Timer?>? restTimer,
+    Nullable<Timer?>? medicationTimer,
     AclsHeartFrequency? heartFrequency,
     List<String>? events,
     List<AclsMedication>? medications,
     bool? advancedAirway,
+    int? totalCompressions,
+    int? totalAdrenalines,
+    int? totalMedications,
+    int? totalShocks,
+    List<ActivityLog>? activities,
     AclsAlert? Function()? alert,
     AppError? error,
   }) {
@@ -56,12 +104,21 @@ class AclsState {
       status: status ?? this.status,
       step: step ?? this.step,
       totalTimer: totalTimer ?? this.totalTimer,
-      compressionsTime: compressionsTime ?? this.compressionsTime,
-      adrenalineTime: adrenalineTime ?? this.adrenalineTime,
+      compressionsTimer: compressionsTimer != null
+          ? compressionsTimer()
+          : this.compressionsTimer,
+      restTimer: restTimer != null ? restTimer() : this.restTimer,
+      medicationTimer:
+          medicationTimer != null ? medicationTimer() : this.medicationTimer,
       heartFrequency: heartFrequency ?? this.heartFrequency,
       events: events ?? this.events,
       medications: medications ?? this.medications,
       advancedAirway: advancedAirway ?? this.advancedAirway,
+      totalCompressions: totalCompressions ?? this.totalCompressions,
+      totalAdrenalines: totalAdrenalines ?? this.totalAdrenalines,
+      totalShocks: totalShocks ?? this.totalShocks,
+      totalMedications: totalMedications ?? this.totalMedications,
+      activities: activities ?? this.activities,
       alert: alert != null ? alert() : this.alert,
       error: error ?? this.error,
     );

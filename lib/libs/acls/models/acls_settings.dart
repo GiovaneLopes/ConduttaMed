@@ -14,7 +14,7 @@ class AclsSettings extends Equatable {
 
   const AclsSettings({
     this.defaultFrequency = 100,
-    this.defaultTime = 3,
+    this.defaultTime = 4,
     this.showInitialSuggestions = true,
     this.events = const [
       'Monitorização',

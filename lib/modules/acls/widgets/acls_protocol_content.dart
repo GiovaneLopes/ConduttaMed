@@ -1,13 +1,13 @@
-import 'package:condutta_med/libs/acls/models/acls_heart_frequency.dart';
-import 'package:condutta_med/libs/acls/models/acls_step.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:condutta_med/modules/acls/acls_routes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:condutta_med/libs/acls/models/acls_step.dart';
 import 'package:condutta_med/modules/acls/bloc/acls/acls_cubit.dart';
 import 'package:condutta_med/modules/shared/resources/app_colors.dart';
+import 'package:condutta_med/libs/acls/models/acls_heart_frequency.dart';
 import 'package:condutta_med/modules/shared/components/solid_button.dart';
 import 'package:condutta_med/modules/shared/resources/app_text_styles.dart';
 import 'package:condutta_med/modules/shared/components/custom_switch_tile.dart';
@@ -43,49 +43,49 @@ class _AclsProtocolContentState extends State<AclsProtocolContent> {
                 const SizedBox(height: 5),
                 Text(
                   state.step.toString(),
-                  style: AppTextStyles.subtitleBold
-                      .copyWith(color: AppColors.success),
-                ),
-                SizedBox(height: 12.h),
-                IconNavigationTile(
-                  icon: Symbols.monitor_heart,
-                  title: 'Ritmo cardíaco',
-                  value: state.heartFrequency.toString(),
-                  backgroundColor:
-                      (state.heartFrequency == AclsHeartFrequency.unknown)
-                          ? AppColors.success
-                          : null,
-                  onTap: AclsRoutes.heartFrequency.navigate,
+                  style:
+                      AppTextStyles.bodyNormal.copyWith(color: AppColors.grey),
                 ),
                 SizedBox(height: 12.h),
                 _buildActionSection(
-                  label: 'Massagem cardíaca',
-                  time: state.formatTime(state.compressionsTime),
-                  value: (120 - state.compressionsTime) / 120,
-                  buttonText:
-                      state.compressionsTime < 120 ? 'Parar' : 'Iniciar',
-                  indicatorColor: state.compressionsTime <= 15
+                  label: 'Compressão torácica',
+                  time: state.compressionsTimerFormatted,
+                  value: state.compressionsTimer?.isActive == true
+                      ? (state.compressionsTotalTime -
+                              state.compressionsTimeLeft) /
+                          state.compressionsTotalTime
+                      : 0,
+                  buttonText: (state.compressionsTimer?.isActive ?? false)
+                      ? 'Parar'
+                      : 'Iniciar',
+                  indicatorColor: state.compressionsTimeLeft <= 15
                       ? AppColors.danger
-                      : state.compressionsTime <= 30
+                      : state.compressionsTimeLeft <= 30
                           ? AppColors.tertiary
-                          : AppColors.success,
+                          : AppColors.primary,
                   color: (state.step == AclsStep.massage)
                       ? AppColors.success
                       : AppColors.secondary,
-                  onButtonPressed: bloc.startCompressions,
+                  onButtonPressed: state.compressionsTimer?.isActive == true
+                      ? bloc.stopCompressions
+                      : bloc.startCompressions,
                 ),
                 SizedBox(height: 12.h),
                 _buildActionSection(
                   label: 'Adrenalina',
-                  time: '00:00',
-                  value: 0,
+                  time: state.formatTime(state.medicationTimeLeft),
+                  value: state.medicationTimer?.isActive == true
+                      ? (state.medicationTotalTime - state.medicationTimeLeft) /
+                          state.medicationTotalTime
+                      : 0,
                   buttonText: 'Administrar',
-                  color: (state.step == AclsStep.medication)
+                  color: (state.step == AclsStep.medication &&
+                          !(state.medicationTimer?.isActive ?? false))
                       ? AppColors.success
                       : AppColors.secondary,
-                  indicatorColor: AppColors.success,
+                  indicatorColor: AppColors.primary,
                   icon: Icons.medication_outlined,
-                  onButtonPressed: () {},
+                  onButtonPressed: bloc.startAdrenaline,
                 ),
                 SizedBox(height: 12.h),
                 const Divider(),
@@ -95,10 +95,27 @@ class _AclsProtocolContentState extends State<AclsProtocolContent> {
                   color: (state.step == AclsStep.shock)
                       ? AppColors.success
                       : AppColors.secondary,
+                  labelColor: (state.step == AclsStep.shock)
+                      ? AppColors.textBlack.withOpacity(.75)
+                      : AppColors.textWhite,
                   icon: Icons.bolt,
-                  onPressed: () {},
+                  onPressed: bloc.startShock,
                 ),
                 SizedBox(height: 12.h),
+                const Divider(),
+                SizedBox(height: 12.h),
+                IconNavigationTile(
+                  icon: Symbols.monitor_heart,
+                  title: 'Ritmo cardíaco',
+                  value: state.heartFrequency.toString(),
+                  backgroundColor:
+                      (state.heartFrequency == AclsHeartFrequency.unknown &&
+                              state.totalCompressions >= 1 &&
+                              state.compressionsTimer?.isActive == false)
+                          ? AppColors.success
+                          : null,
+                  onTap: AclsRoutes.heartFrequency.navigate,
+                ),
                 IconNavigationTile(
                   value: 'Eventos',
                   icon: Icons.pending_actions_outlined,
@@ -123,7 +140,7 @@ class _AclsProtocolContentState extends State<AclsProtocolContent> {
                 SizedBox(height: 24.h),
                 SolidButton(
                   label: 'Encerrar RCP',
-                  onPressed: () {},
+                  onPressed: AclsRoutes.finish.navigate,
                 ),
                 SizedBox(height: 24.h),
               ],
@@ -159,7 +176,7 @@ class _AclsProtocolContentState extends State<AclsProtocolContent> {
             Text(
               time,
               style: AppTextStyles.bodyBold.copyWith(
-                color: (value ?? 0) > 0 ? AppColors.grey : Colors.transparent,
+                color: AppColors.grey,
               ),
             ),
           ],
@@ -175,6 +192,9 @@ class _AclsProtocolContentState extends State<AclsProtocolContent> {
         SolidButton(
           label: buttonText,
           color: color,
+          labelColor: color == AppColors.success
+              ? AppColors.textBlack.withOpacity(.75)
+              : AppColors.textWhite,
           icon: icon,
           onPressed: onButtonPressed,
         ),

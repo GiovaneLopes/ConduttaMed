@@ -16,58 +16,54 @@ class AclsInformationsContent extends StatelessWidget {
     return BlocBuilder<AclsCubit, AclsState>(
       bloc: bloc,
       builder: (context, state) {
-        return Padding(
-          padding: EdgeInsets.only(top: 16.h, left: 24.w, right: 24.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Resumo',
-                style: AppTextStyles.bodyBold.copyWith(color: AppColors.grey),
-              ),
-              const InfoLine(
-                title: 'FCT',
-                value: '2%',
-                valueColor: AppColors.danger,
-              ),
-              const InfoLine(
-                title: 'Ciclos de compressão',
-                value: '2',
-              ),
-              const InfoLine(
-                title: 'Choques',
-                value: '1',
-              ),
-              const InfoLine(
-                title: 'Adrenalinas',
-                value: '2',
-              ),
-              const InfoLine(
-                title: 'Medicações',
-                value: '5',
-              ),
-              SizedBox(height: 24.h),
-              Text(
-                'Registros',
-                style: AppTextStyles.bodyBold.copyWith(color: AppColors.grey),
-              ),
-              const InfoLine(
-                title: 'Fibrilação ventricular',
-                value: '00:56',
-              ),
-              const InfoLine(
-                title: 'Ciclo massagem 1',
-                value: '00:58',
-              ),
-              const InfoLine(
-                title: 'Via aérea Avançada Disponível',
-                value: '01:45',
-              ),
-              const InfoLine(
-                title: 'Adrenalina 1',
-                value: '01:59',
-              ),
-            ],
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(top: 16.h, left: 24.w, right: 24.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Resumo',
+                  style: AppTextStyles.bodyBold.copyWith(color: AppColors.grey),
+                ),
+                InfoLine(
+                  title: 'FCT',
+                  value: '${state.fct}%',
+                  valueColor: state.fct < 60
+                      ? AppColors.danger
+                      : state.fct < 80
+                          ? AppColors.tertiary
+                          : AppColors.success,
+                ),
+                InfoLine(
+                  title: 'Ciclos de compressão',
+                  value: state.totalCompressions.toString(),
+                ),
+                InfoLine(
+                  title: 'Choques',
+                  value: state.totalShocks.toString(),
+                ),
+                InfoLine(
+                  title: 'Adrenalinas',
+                  value: state.totalAdrenalines.toString(),
+                ),
+                InfoLine(
+                  title: 'Medicações',
+                  value: state.totalMedications.toString(),
+                ),
+                SizedBox(height: 24.h),
+                Text(
+                  'Registros',
+                  style: AppTextStyles.bodyBold.copyWith(color: AppColors.grey),
+                ),
+                ...state.activities.map((activity) {
+                  return InfoLine(
+                    title: activity.title,
+                    value: activity.time,
+                  );
+                })
+              ],
+            ),
           ),
         );
       },

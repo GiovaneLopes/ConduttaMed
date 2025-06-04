@@ -32,12 +32,12 @@ class ProfileTabContent extends StatelessWidget {
       }
     }
 
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w),
-      child: BlocBuilder<AuthCubit, AuthState>(
-          bloc: bloc,
-          builder: (context, state) {
-            return Column(
+    return BlocBuilder<AuthCubit, AuthState>(
+        bloc: bloc,
+        builder: (context, state) {
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Visibility(
@@ -61,23 +61,25 @@ class ProfileTabContent extends StatelessWidget {
                 ),
                 Visibility(
                   visible: bloc.state.user != null,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 28.h),
-                      IconNavigationTile(
-                        icon: FeatherIcons.edit,
-                        value: 'Meus dados',
-                        enabled: bloc.state.user != null,
-                        onTap: ProfileRoutes.profile.navigate,
-                      ),
-                      IconNavigationTile(
-                        icon: FeatherIcons.logOut,
-                        value: 'Sair',
-                        enabled: bloc.state.user != null,
-                        onTap: bloc.logout,
-                      ),
-                    ],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 28.h),
+                        IconNavigationTile(
+                          icon: FeatherIcons.edit,
+                          value: 'Meus dados',
+                          enabled: bloc.state.user != null,
+                          onTap: ProfileRoutes.profile.navigate,
+                        ),
+                        IconNavigationTile(
+                          icon: FeatherIcons.logOut,
+                          value: 'Sair',
+                          enabled: bloc.state.user != null,
+                          onTap: bloc.logout,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Expanded(
@@ -153,67 +155,50 @@ class ProfileTabContent extends StatelessWidget {
                               const Flexible(child: Divider()),
                             ],
                           ),
-                          Column(
+                          SizedBox(height: 12.h),
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              SizedBox(height: 12.h),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  GestureDetector(
-                                    onTap: bloc.googleAuthentication,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(8),
-                                      width: 60.w,
-                                      height: 60.w,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: AppColors.disabled,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.w)),
-                                      child: state.status ==
-                                              AuthStatus.authenticating
-                                          ? const CustomCircularProgressIndicator(
-                                              color: AppColors.secondary)
-                                          : Image.asset(Images.gmailLogo),
-                                    ),
-                                  ),
-                                  // GestureDetector(
-                                  //   onTap: bloc.appleRegister,
-                                  //   child: Container(
-                                  //     padding: const EdgeInsets.all(8),
-                                  //     width: 60.w,
-                                  //     height: 60.w,
-                                  //     decoration: BoxDecoration(
-                                  //         border: Border.all(
-                                  //           color: AppColors.disabled,
-                                  //         ),
-                                  //         borderRadius:
-                                  //             BorderRadius.circular(8.w)),
-                                  //     child: Image.asset(Images.appStoreLogo),
-                                  //   ),
-                                  // ),
-                                  GestureDetector(
-                                    onTap: AuthRoutes.registration.navigate,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(8),
-                                      width: 60.w,
-                                      height: 60.w,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: AppColors.disabled,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.w)),
-                                      child: Icon(
-                                        Icons.email_outlined,
-                                        size: 42.w,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                            children: [
+                              GestureDetector(
+                                onTap: bloc.googleAuthentication,
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  width: 60.w,
+                                  height: 60.w,
+                                  child: state.status ==
+                                          AuthStatus.authenticating
+                                      ? const CustomCircularProgressIndicator(
+                                          color: AppColors.secondary)
+                                      : Image.asset(Images.gmailLogo),
+                                ),
+                              ),
+                              SizedBox(width: 12.w),
+                              GestureDetector(
+                                onTap: bloc.appleRegister,
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  width: 60.w,
+                                  height: 60.w,
+                                  child: Image.asset(Images.appStoreLogo),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 18.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Não tem conta?',
+                                style: AppTextStyles.subtitleNormal,
+                              ),
+                              SizedBox(width: 8.h),
+                              GestureDetector(
+                                onTap: AuthRoutes.registration.navigate,
+                                child: Text('Cadastre-se agora!',
+                                    style: AppTextStyles.subtitleBold.copyWith(
+                                      color: AppColors.secondary,
+                                    )),
                               )
                             ],
                           ),
@@ -223,8 +208,8 @@ class ProfileTabContent extends StatelessWidget {
                   ),
                 ),
               ],
-            );
-          }),
-    );
+            ),
+          );
+        });
   }
 }

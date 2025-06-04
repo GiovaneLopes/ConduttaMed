@@ -8,6 +8,7 @@ import 'package:condutta_med/modules/shared/components/custom_text_button.dart';
 class CustomDialog extends StatefulWidget {
   final String title;
   final String? subtitle;
+  final bool isCancelable;
   final String confirmButtonLabel;
   final Widget? content;
   final void Function() onConfirm;
@@ -17,6 +18,7 @@ class CustomDialog extends StatefulWidget {
     required this.title,
     required this.confirmButtonLabel,
     required this.onConfirm,
+    this.isCancelable = false,
     this.subtitle,
     this.content,
   });
@@ -58,11 +60,14 @@ class _CustomDialogState extends State<CustomDialog> {
               label: widget.confirmButtonLabel,
             ),
             SizedBox(height: 8.h),
-            CustomTextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              label: 'Cancelar',
+            Visibility(
+              visible: widget.isCancelable,
+              child: CustomTextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                label: 'Cancelar',
+              ),
             ),
           ],
         ),

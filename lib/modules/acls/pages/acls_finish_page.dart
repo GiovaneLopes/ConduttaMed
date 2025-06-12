@@ -34,8 +34,9 @@ class AclsFinishPage extends StatelessWidget {
               showCustomDialog(
                 context,
                 confirmButtonLabel: 'Finalizar',
+                isCancelable: false,
                 onConfirm: () {
-                  Modular.get<AclsCubit>().dispose();
+                  Modular.get<AclsCubit>().finishRCP();
                   Modular.to
                       .popUntil(ModalRoute.withName(AclsRoutes.initial.path));
                 },
@@ -83,7 +84,7 @@ class AclsFinishPage extends StatelessWidget {
             icon: Symbols.circle,
             value: 'Óbito',
             onTap: () {
-              Modular.get<AclsCubit>().dispose();
+              Modular.get<AclsCubit>().finishRCP();
               Modular.to.popUntil(ModalRoute.withName(AclsRoutes.initial.path));
             },
           ),

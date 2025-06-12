@@ -11,7 +11,9 @@ import 'package:condutta_med/libs/src/exceptions/app_error.dart';
 import 'package:condutta_med/libs/acls/models/acls_settings.dart';
 import 'package:condutta_med/modules/shared/resources/audios.dart';
 import 'package:condutta_med/libs/acls/models/acls_medications.dart';
+import 'package:condutta_med/libs/acls/models/acls_history_item.dart';
 import 'package:condutta_med/libs/acls/models/acls_heart_frequency.dart';
+import 'package:condutta_med/modules/acls/bloc/acls_history/acls_history_cubit.dart';
 import 'package:condutta_med/modules/acls/bloc/acls_settings/acls_settings_cubit.dart';
 // import 'package:condutta_med/modules/shared/resources/audios.dart';
 
@@ -26,6 +28,7 @@ enum AclsStatus {
 
 class AclsCubit extends Cubit<AclsState> {
   final AclsSettingsCubit settingsCubit;
+  final AclsHistoryCubit historyCubit;
   final AudioPlayer _player = AudioPlayer();
   Timer? _totalTimer;
   Timer? _compressionsTimer;
@@ -33,11 +36,13 @@ class AclsCubit extends Cubit<AclsState> {
   Timer? _adrenalineTimer;
   Timer? _metronomeTimer;
 
-  AclsCubit(this.settingsCubit) : super(const AclsState());
+  AclsCubit(this.settingsCubit, this.historyCubit) : super(const AclsState());
 
   void initTimer() async {
     log('### initTimer');
-    emit(state.copyWith(settings: settingsCubit.state.settings));
+    emit(state.copyWith(
+        settings: settingsCubit.state.settings, srtartTime: DateTime.now()));
+    _updateActivities('Início da RCP');
     _totalTimer = Timer.periodic(
       const Duration(seconds: 1),
       (Timer timer) {
@@ -72,6 +77,8 @@ class AclsCubit extends Cubit<AclsState> {
       } else {
         stopCompressions();
       }
+      emit(state.copyWith(
+          totalCompressionsTime: state.totalCompressionsTime + 1));
     });
     _updateActivities(
         'Início: Ciclo de compressões ${state.totalCompressions}');
@@ -121,13 +128,12 @@ class AclsCubit extends Cubit<AclsState> {
 
   Future<void> startAdrenaline() async {
     log('### startAdrenaline');
-    emit(state.copyWith(
-      totalAdrenalines: state.totalAdrenalines + 1,
-      totalMedications: state.totalMedications + 1,
-    ));
-
     if (state.compressionsTimer?.isActive ?? false) {
       _adrenalineTimer?.cancel();
+      emit(state.copyWith(
+        totalAdrenalines: state.totalAdrenalines + 1,
+        totalMedications: state.totalMedications + 1,
+      ));
       _updateActivities('Adrenalina ${state.totalAdrenalines}');
       emit(state.copyWith(
           medicationTimer: () => Timer(const Duration(seconds: 1), () {})));
@@ -193,13 +199,14 @@ class AclsCubit extends Cubit<AclsState> {
     emit(state.copyWith(advancedAirway: !state.advancedAirway));
     if (state.advancedAirway) {
       _showSnackBar(AclsAlert.viaAeraAvancadaDisponivelACLS);
+      Vibrator.vibrate();
     }
     _updateActivities(
         'Via aérea Avançada ${state.advancedAirway ? 'Disponível' : 'Indisponível'}');
   }
 
   void _updateActivities(String activity) {
-    log('### _updateActivities');
+    log('### _updateActivities: $activity');
     emit(state.copyWith(
       activities: [
         ...state.activities,
@@ -217,12 +224,26 @@ class AclsCubit extends Cubit<AclsState> {
     emit(state.copyWith(alert: () => null));
   }
 
-  void dispose() {
+  void finishRCP() {
     _totalTimer?.cancel();
     _compressionsTimer?.cancel();
     _compressionsRestTimer?.cancel();
     _adrenalineTimer?.cancel();
     _metronomeTimer?.cancel();
+    historyCubit.saveHistory(
+      AclsHistoryItem(
+        id: DateTime.now().toIso8601String(),
+        date: state.srtartTime ?? DateTime.now(),
+        totalCompressions: state.totalCompressions,
+        totalShocks: state.totalShocks,
+        totalAdrenalines: state.totalAdrenalines,
+        totalMedications: state.totalMedications,
+        activities: state.activities,
+        duration: state.totalTimerTick,
+        fct: state.fct,
+        totalCompressionsTime: state.totalCompressionsTime,
+      ),
+    );
     _updateActivities('Fim da RCP');
     emit(const AclsState());
   }

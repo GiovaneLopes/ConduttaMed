@@ -7,8 +7,8 @@ part of 'acls_settings.dart';
 // **************************************************************************
 
 AclsSettings _$AclsSettingsFromJson(Map<String, dynamic> json) => AclsSettings(
-      defaultFrequency: (json['defaultFrequency'] as num?)?.toInt() ?? 100,
-      defaultTime: (json['defaultTime'] as num?)?.toInt() ?? 3,
+      defaultFrequency: (json['defaultFrequency'] as num?)?.toInt() ?? 110,
+      defaultTime: (json['defaultTime'] as num?)?.toInt() ?? 4,
       showInitialSuggestions: json['showInitialSuggestions'] as bool? ?? true,
       events: (json['events'] as List<dynamic>?)
               ?.map((e) => e as String)

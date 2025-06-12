@@ -6,6 +6,7 @@ import 'package:condutta_med/modules/auth/auth_routes.dart';
 import 'package:condutta_med/libs/user/model/user_model.dart';
 import 'package:condutta_med/libs/src/exceptions/app_error.dart';
 import 'package:condutta_med/modules/shared/utils/app_route.dart';
+import 'package:condutta_med/libs/acls/repository/acls_repository.dart';
 import 'package:condutta_med/libs/user/repository/user_repository.dart';
 import 'package:condutta_med/libs/user/errors/user_datasource_errors.dart';
 
@@ -22,7 +23,8 @@ enum AuthStatus {
 
 class AuthCubit extends Cubit<AuthState> {
   final UserRepository repository;
-  AuthCubit(this.repository) : super(const AuthState()) {
+  final AclsRespository aclsRepository;
+  AuthCubit(this.repository, this.aclsRepository) : super(const AuthState()) {
     initialize();
   }
 
@@ -216,7 +218,7 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       emit(state.copyWith(status: AuthStatus.loading));
       await repository.logout();
-
+      aclsRepository.clean();
       emit(state.copyWith(
         status: AuthStatus.loaded,
         user: () => null,

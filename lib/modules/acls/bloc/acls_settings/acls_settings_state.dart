@@ -21,7 +21,7 @@ class AclsSettingsState {
   }) {
     return AclsSettingsState(
       status: status ?? this.status,
-      error: error ?? this.error,
+      error: error,
       settings: settings ?? this.settings,
     );
   }

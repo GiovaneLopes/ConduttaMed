@@ -49,6 +49,7 @@ class _AclsPageState extends State<AclsPage>
         confirmButtonLabel: 'Iniciar',
         onConfirm: Modular.to.pop,
         title: 'Medidas iniciais',
+        isCancelable: false,
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

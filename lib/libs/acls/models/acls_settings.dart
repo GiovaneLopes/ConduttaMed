@@ -13,7 +13,7 @@ class AclsSettings extends Equatable {
   final List<AclsMedication> medications;
 
   const AclsSettings({
-    this.defaultFrequency = 100,
+    this.defaultFrequency = 110,
     this.defaultTime = 4,
     this.showInitialSuggestions = true,
     this.events = const [

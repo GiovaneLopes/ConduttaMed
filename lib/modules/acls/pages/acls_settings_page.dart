@@ -149,6 +149,8 @@ class _AclsSettingsPageState extends State<AclsSettingsPage> {
                   ),
                 ),
                 SizedBox(height: 12.h),
+                const Divider(),
+                SizedBox(height: 12.h),
                 IconNavigationTile(
                   icon: Icons.pending_actions_outlined,
                   value: 'Eventos',
@@ -159,6 +161,7 @@ class _AclsSettingsPageState extends State<AclsSettingsPage> {
                   value: 'Medicações',
                   onTap: AclsRoutes.settingsMedications.navigate,
                 ),
+   
                 CustomSwitchTile(
                   value: state.settings.showInitialSuggestions,
                   title: 'Mostrar medidas iniciais',
@@ -168,6 +171,8 @@ class _AclsSettingsPageState extends State<AclsSettingsPage> {
                     ));
                   },
                 ),
+                SizedBox(height: 12.h),
+                const Divider(),
                 SizedBox(height: 12.h),
                 OutlinedButton(
                   style: OutlinedButton.styleFrom(

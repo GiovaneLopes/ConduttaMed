@@ -18,7 +18,7 @@ class CustomDialog extends StatefulWidget {
     required this.title,
     required this.confirmButtonLabel,
     required this.onConfirm,
-    this.isCancelable = false,
+    this.isCancelable = true,
     this.subtitle,
     this.content,
   });
@@ -80,6 +80,7 @@ Future<void> showCustomDialog(
   BuildContext context, {
   required String title,
   required String confirmButtonLabel,
+  bool isCancelable = true,
   String? subtitle,
   Widget? content,
   required void Function() onConfirm,
@@ -90,6 +91,7 @@ Future<void> showCustomDialog(
       title: title,
       confirmButtonLabel: confirmButtonLabel,
       onConfirm: onConfirm,
+      isCancelable: isCancelable,
       content: content,
       subtitle: subtitle,
     ),

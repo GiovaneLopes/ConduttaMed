@@ -31,6 +31,17 @@ class _AclsProtocolContentState extends State<AclsProtocolContent> {
         child: BlocBuilder<AclsCubit, AclsState>(
           bloc: bloc,
           builder: (context, state) {
+            debugPrint('##########################################');
+            debugPrint('### totalTimer: ${state.totalTimeFormatted}');
+            debugPrint('### totalCompressions: ${state.totalCompressions}');
+            debugPrint(
+                '### totalCompressionsTimer: ${state.compressionsTimerFormatted}');
+            debugPrint('### restTimer: ${state.formatTime(state.restTick)}');
+            debugPrint(
+                '### medicationTimer: ${state.formatTime(state.medicationTick)}: left: ${state.formatTime(state.medicationTimeLeft)}');
+            debugPrint('### totalMedications: ${state.totalAdrenalines}');
+            debugPrint('### totalShocks: ${state.totalShocks}');
+            debugPrint('### fct: ${state.fct}');
             return Column(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -43,8 +54,8 @@ class _AclsProtocolContentState extends State<AclsProtocolContent> {
                 const SizedBox(height: 5),
                 Text(
                   state.step.toString(),
-                  style:
-                      AppTextStyles.bodyNormal.copyWith(color: AppColors.grey),
+                  style: AppTextStyles.bodyNormal
+                      .copyWith(color: AppColors.textBlack),
                 ),
                 SizedBox(height: 12.h),
                 _buildActionSection(
@@ -117,14 +128,14 @@ class _AclsProtocolContentState extends State<AclsProtocolContent> {
                   onTap: AclsRoutes.heartFrequency.navigate,
                 ),
                 IconNavigationTile(
-                  value: 'Eventos',
-                  icon: Icons.pending_actions_outlined,
-                  onTap: AclsRoutes.events.navigate,
-                ),
-                IconNavigationTile(
                   value: 'Medicações',
                   icon: Symbols.pill,
                   onTap: AclsRoutes.medications.navigate,
+                ),
+                IconNavigationTile(
+                  value: 'Eventos',
+                  icon: Icons.pending_actions_outlined,
+                  onTap: AclsRoutes.events.navigate,
                 ),
                 const Divider(),
                 CustomSwitchTile(

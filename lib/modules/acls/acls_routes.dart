@@ -10,10 +10,14 @@ class AclsRoutes extends AppRoute {
   static final AclsRoutes acls = AclsRoutes('/acls');
   static final AclsRoutes heartFrequency = AclsRoutes('/heart-rate');
   static final AclsRoutes flow = AclsRoutes('/flow');
+  static final AclsRoutes finish = AclsRoutes('/finish');
+
+  static final AclsRoutes aclsHistory = AclsRoutes('/history');
+  static final AclsRoutes aclsHistoryItem = AclsRoutes('/item');
+
+  static final AclsRoutes aclsSettings = AclsRoutes('/settings');
   static final AclsRoutes events = AclsRoutes('/events');
   static final AclsRoutes medications = AclsRoutes('/medications');
-  static final AclsRoutes aclsSettings = AclsRoutes('/settings');
-  static final AclsRoutes finish = AclsRoutes('/finish');
 
   static final AclsRoutes settingsEvents = AclsRoutes('/settings/events');
   static final AclsRoutes settingsMedications =

@@ -29,7 +29,7 @@ class AclsInitialPage extends StatelessWidget {
           IconNavigationTile(
             icon: Icons.insert_drive_file_outlined,
             value: 'Histórico',
-            onTap: () {},
+            onTap: AclsRoutes.aclsHistory.navigate,
           ),
           IconNavigationTile(
             icon: Icons.settings_outlined,

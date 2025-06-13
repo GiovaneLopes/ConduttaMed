@@ -31,17 +31,6 @@ class _AclsProtocolContentState extends State<AclsProtocolContent> {
         child: BlocBuilder<AclsCubit, AclsState>(
           bloc: bloc,
           builder: (context, state) {
-            debugPrint('##########################################');
-            debugPrint('### totalTimer: ${state.totalTimeFormatted}');
-            debugPrint('### totalCompressions: ${state.totalCompressions}');
-            debugPrint(
-                '### totalCompressionsTimer: ${state.compressionsTimerFormatted}');
-            debugPrint('### restTimer: ${state.formatTime(state.restTick)}');
-            debugPrint(
-                '### medicationTimer: ${state.formatTime(state.medicationTick)}: left: ${state.formatTime(state.medicationTimeLeft)}');
-            debugPrint('### totalMedications: ${state.totalAdrenalines}');
-            debugPrint('### totalShocks: ${state.totalShocks}');
-            debugPrint('### fct: ${state.fct}');
             return Column(
               mainAxisSize: MainAxisSize.max,
               children: [

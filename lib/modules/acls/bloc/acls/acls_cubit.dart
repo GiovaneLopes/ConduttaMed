@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:just_audio/just_audio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:condutta_med/libs/acls/models/acls_step.dart';
@@ -39,7 +38,6 @@ class AclsCubit extends Cubit<AclsState> {
   AclsCubit(this.settingsCubit, this.historyCubit) : super(const AclsState());
 
   void initTimer() async {
-    log('### initTimer');
     emit(state.copyWith(
         settings: settingsCubit.state.settings, srtartTime: DateTime.now()));
     _updateActivities('Início da RCP');
@@ -52,7 +50,6 @@ class AclsCubit extends Cubit<AclsState> {
   }
 
   Future<void> startCompressions() async {
-    log('### startCompressions');
     _startMetronome();
     emit(state.copyWith(
       compressionsTimer: () => Timer(const Duration(seconds: 1), () {}),
@@ -99,7 +96,6 @@ class AclsCubit extends Cubit<AclsState> {
   }
 
   Future<void> _startMetronome() async {
-    log('### _startMetronome');
     _metronomeTimer = Timer.periodic(
       Duration(milliseconds: state.settings.miliseconds),
       (timer) async {
@@ -110,7 +106,6 @@ class AclsCubit extends Cubit<AclsState> {
   }
 
   Future<void> _startRest() async {
-    log('### _startRest');
     _compressionsRestTimer?.cancel();
     emit(state.copyWith(
         restTimer: () => Timer(const Duration(seconds: 1), () {})));
@@ -127,7 +122,6 @@ class AclsCubit extends Cubit<AclsState> {
   }
 
   Future<void> startAdrenaline() async {
-    log('### startAdrenaline');
     if (state.compressionsTimer?.isActive ?? false) {
       _adrenalineTimer?.cancel();
       emit(state.copyWith(
@@ -152,7 +146,6 @@ class AclsCubit extends Cubit<AclsState> {
   }
 
   Future<void> startShock() async {
-    log('### startShock');
     emit(state.copyWith(totalShocks: state.totalShocks + 1));
     _showSnackBar(AclsAlert.choqueAdicionado);
     stopCompressions();
@@ -160,7 +153,6 @@ class AclsCubit extends Cubit<AclsState> {
   }
 
   void selectFrequency(AclsHeartFrequency frequency) async {
-    log('### selectFrequency');
     emit(state.copyWith(heartFrequency: frequency));
     if (frequency == AclsHeartFrequency.assistolia) {
       _showSnackBar(AclsAlert.checarCAGADA);
@@ -176,7 +168,6 @@ class AclsCubit extends Cubit<AclsState> {
   }
 
   void addMedication(AclsMedication medication) {
-    log('### addMedication');
     emit(state.copyWith(
       medications: [...state.medications, medication],
       totalMedications: state.totalMedications + 1,
@@ -187,7 +178,6 @@ class AclsCubit extends Cubit<AclsState> {
   }
 
   void addEvent(String event) {
-    log('### addEvent');
     emit(state.copyWith(events: [...state.events, event]));
     _showSnackBar(AclsAlert.eventoAdicionado);
     _updateActivities(event);
@@ -195,7 +185,6 @@ class AclsCubit extends Cubit<AclsState> {
   }
 
   void advancedAirwayChanged() {
-    log('### advancedAirwayChanged');
     emit(state.copyWith(advancedAirway: !state.advancedAirway));
     if (state.advancedAirway) {
       _showSnackBar(AclsAlert.viaAeraAvancadaDisponivelACLS);
@@ -206,7 +195,6 @@ class AclsCubit extends Cubit<AclsState> {
   }
 
   void _updateActivities(String activity) {
-    log('### _updateActivities: $activity');
     emit(state.copyWith(
       activities: [
         ...state.activities,
@@ -219,7 +207,6 @@ class AclsCubit extends Cubit<AclsState> {
   }
 
   void _showSnackBar(AclsAlert alert) {
-    log('### _showSnackBar');
     emit(state.copyWith(alert: () => alert));
     emit(state.copyWith(alert: () => null));
   }

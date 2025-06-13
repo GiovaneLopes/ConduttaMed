@@ -2,6 +2,9 @@
 <p align="center">Seu aliado essencial na prática clínica, oferecendo protocolos, calculadoras e informações cruciais para a tomada de decisões rápidas e precisas.</p>
 <br>
 
+## 📱 Apresentação UI
+![Texto Alternativo](assets/images/app_presentation.png "Título Opcional")
+
 ## 🚀 Tecnologias Utilizadas
 
 Este aplicativo Flutter foi construído utilizando as seguintes tecnologias e padrões de arquitetura:

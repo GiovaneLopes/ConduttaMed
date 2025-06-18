@@ -10,7 +10,9 @@ import 'package:condutta_med/modules/shared/utils/validators.dart';
 import 'package:condutta_med/modules/shared/resources/images.dart';
 import 'package:condutta_med/modules/shared/resources/app_colors.dart';
 import 'package:condutta_med/modules/shared/components/solid_button.dart';
+import 'package:condutta_med/modules/shared/components/custom_dialog.dart';
 import 'package:condutta_med/modules/shared/resources/app_text_styles.dart';
+import 'package:condutta_med/modules/shared/components/snackbar_widget.dart';
 import 'package:condutta_med/modules/shared/components/custom_text_field.dart';
 import 'package:condutta_med/modules/shared/components/icon_navigation_tile.dart';
 import 'package:condutta_med/modules/shared/components/custom_circular_progress_indicator.dart';
@@ -32,7 +34,16 @@ class ProfileTabContent extends StatelessWidget {
       }
     }
 
-    return BlocBuilder<AuthCubit, AuthState>(
+    return BlocConsumer<AuthCubit, AuthState>(
+        listener: (context, state) {
+          if (state.status == AuthStatus.error) {
+            SnackbarWidget.mostrar(
+              context,
+              title: state.error?.title,
+              message: state.error?.message,
+            );
+          }
+        },
         bloc: bloc,
         builder: (context, state) {
           return Padding(
@@ -76,7 +87,16 @@ class ProfileTabContent extends StatelessWidget {
                           icon: FeatherIcons.logOut,
                           value: 'Sair',
                           enabled: bloc.state.user != null,
-                          onTap: bloc.logout,
+                          onTap: () => showCustomDialog(
+                            context,
+                            title: 'Tem certeza que deseja sair?',
+                            confirmButtonLabel: 'Sim',
+                            content: SizedBox(height: 12.h),
+                            onConfirm: () {
+                              bloc.logout();
+                              Navigator.of(context).pop();
+                            },
+                          ),
                         ),
                       ],
                     ),

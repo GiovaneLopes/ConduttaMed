@@ -21,10 +21,7 @@ class AclsHistoryDataPage extends StatelessWidget {
       actions: Row(
         children: [
           IconButton(
-            onPressed: () async {
-              // final pdfFile = await PdfApi.generatePdf(controller.rcp.value);
-              // SharePlus.instance.share(XFile(pdfFile.path);
-            },
+            onPressed: () => bloc.sharePdf(bloc.state.selected!),
             icon: Icon(
               Icons.share,
               color: AppColors.secondary,

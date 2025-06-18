@@ -46,7 +46,6 @@ class AppValidators {
       return 'Campo obrigatório';
     }
     if (value.length < 14) {
-      // Considerando a máscara do BrasilFields
       return 'Celular inválido';
     }
     return null;
